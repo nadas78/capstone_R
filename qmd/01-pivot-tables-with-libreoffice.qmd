@@ -1,6 +1,6 @@
 ---
 title: "Analyse sur les élèves inscrits dans les établissements scolaires publics en 2021/2022"
-date: "2025-12-30"
+date: "2025-12-25"
 
 format:
   html:
