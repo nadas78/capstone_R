@@ -1,20 +1,19 @@
 project:
   type: website
   output-dir: docs
-  render: 
+  render:
     - "*.qmd"
     - "qmd/*.qmd"
 
 website:
   title: "Analyse descriptive des données et méthodes statistiques en R"
-  site-url: "hcapstone_R/"
-  repo-url: "https://github.com/nadas78/capstone_R.git"
-  
+  site-url: "https://nadas78.github.io/capstone_R/"
+  repo-url: "https://github.com/nadas78/capstone_R"
   repo-actions: [edit, issue]
   sidebar:
-    style: "docked"
+    style: docked
     search: true
-    contents:ttps://nadas78.github.io/
+    contents:
       - section: Projects
         contents:
           - qmd/01-pivot-tables-with-libreoffice.qmd
@@ -25,7 +24,7 @@ website:
       - section: Presentations
         contents:
           - qmd/06-classical-tests.qmd
-      - section: other
+      - section: Other
         contents:
           - qmd/other.qmd
 
@@ -49,9 +48,15 @@ format:
       - left=25mm
       - bottom=25mm
 
-# Configuration WebR (R seulement)
 webr:
-  packages: ["dplyr", "ggplot2", "readxl", "tidyr", "lubridate", "car", "lmtest"]
+  packages:
+    - dplyr
+    - ggplot2
+    - readxl
+    - tidyr
+    - lubridate
+    - car
+    - lmtest
 
 execute:
   freeze: true
@@ -59,11 +64,9 @@ execute:
   echo: false
   warning: false
   message: false
-  engine: r  # ← FORCER l'utilisation de R seulement
+  engine: r
 
-# DÉSACTIVER Jupyter
-kernel:
-  jupyter: false
+jupyter: false
 
 bibliography: bib.bib
 csl: apa.csl
