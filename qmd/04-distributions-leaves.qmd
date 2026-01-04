@@ -1,5 +1,5 @@
 ---
-title: "Distribution and Confidence Intervals of Maple Leaf Samples"
+title: "Projet  AI for gaming"
 date: '2025-11-04'
 ---
 

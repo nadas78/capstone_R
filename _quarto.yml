@@ -6,15 +6,15 @@ project:
     - "qmd/*.qmd"
 
 website:
-  title: "Elements of Data Analysis and Statistics - Lab Exercises"
-  site-url: "https://nevermind78.github.io/capstone_R/"
-  repo-url: "https://github.com/nevermind78/capstone_R"
+  title: "Analyse descriptive des données et méthodes statistiques en R"
+  site-url: "hcapstone_R/"
+  repo-url: "https://github.com/nadas78/capstone_R.git"
   
   repo-actions: [edit, issue]
   sidebar:
     style: "docked"
     search: true
-    contents:
+    contents:ttps://nadas78.github.io/
       - section: Projects
         contents:
           - qmd/01-pivot-tables-with-libreoffice.qmd

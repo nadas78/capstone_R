@@ -1,5 +1,5 @@
 ---
-title: "Discharge of River Elbe: Date and Time Computation, Data Management and Plotting with R"
+title: "Site Web des réservation des Hotéls"
 date: "2025-11-15"
 
 format:
@@ -39,7 +39,7 @@ Data are daily measurements for the Elbe River (m³/s) from Dresden, provided by
 ### 1. Download the data and inspect it
 
 ```{webr-r}
-url <- "https://tpetzoldt.github.io/datasets/data/elbe-1806.csv"
+url <- ""
 elbe <- read.csv(url)
 names(elbe)[names(elbe) == "date"] <- "Date"
 

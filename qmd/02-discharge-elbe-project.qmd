@@ -1,5 +1,5 @@
 ---
-title: 'Discharge of River Elbe: Other'
+title: 'Analyse des emotion et satisfaction des joueurs contre les nouvelle technologie dans les jeus video'
 date: "2025-11-18"
 format:
   html:
