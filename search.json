@@ -1,0 +1,783 @@
+[
+  {
+    "objectID": "test_stat.html#statistical-testing-framework",
+    "href": "test_stat.html#statistical-testing-framework",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "Statistical Testing Framework",
+    "text": "Statistical Testing Framework"
+  },
+  {
+    "objectID": "test_stat.html#one-sample-t-test",
+    "href": "test_stat.html#one-sample-t-test",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "One Sample t-Test",
+    "text": "One Sample t-Test\nMathematical Foundation\nTests whether population mean \\(\\mu\\) equals specified value \\(\\mu_0\\):\nTest statistic: \\(t = \\dfrac{\\bar{x} - \\mu_0}{s/\\sqrt{n}}\\)\nwhere:\n\n\n\n\\(\\bar{x}\\)\n\n\nsample mean\n\n\n\n\n\\(s\\)\n\n\nsample standard deviation\n\n\n\n\n\\(n\\)\n\n\nsample size\n\n\n\n\n\\(df = n - 1\\)\n\n\ndegrees of freedom\n\n\n\n\n\n\nData are normally distributed\n\n\n\n\n\n\nObservations are independent"
+  },
+  {
+    "objectID": "test_stat.html#two-sample-t-test",
+    "href": "test_stat.html#two-sample-t-test",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "Two Sample t-Test",
+    "text": "Two Sample t-Test\nIndependent Samples t-Test\nTests whether two population means are equal:\nTest statistic: \\[t = \\frac{\\bar{x}_1 - \\bar{x}_2}{s_p \\sqrt{\\frac{1}{n_1} + \\frac{1}{n_2}}}\\]\nPooled standard deviation: \\[s_p = \\sqrt{\\frac{(n_1-1)s_1^2 + (n_2-1)s_2^2}{n_1 + n_2 - 2}}\\]\nDegrees of freedom: \\(df = n_1 + n_2 - 2\\)"
+  },
+  {
+    "objectID": "test_stat.html#paired-t-test",
+    "href": "test_stat.html#paired-t-test",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "Paired t-Test",
+    "text": "Paired t-Test\nMathematical Formulation\nTests mean difference between paired observations:\nTest statistic: \\(t = \\dfrac{\\bar{d}}{s_d/\\sqrt{n}}\\)\nwhere:\n\n\n\n\\(d_i = x_{i1} - x_{i2}\\)\n\n\npaired differences\n\n\n\n\n\\(\\bar{d}\\)\n\n\nmean of differences\n\n\n\n\n\\(s_d\\)\n\n\nstandard deviation of differences\n\n\n\n\n\\(n\\)\n\n\nnumber of pairs\n\n\n\n\n\\(df = n - 1\\)\n\n\ndegrees of freedom\n\n\n\n\n\n\nDifferences are normally distributed\n\n\n\n\n\n\nPairs are dependent/related"
+  },
+  {
+    "objectID": "test_stat.html#effect-size-measures",
+    "href": "test_stat.html#effect-size-measures",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "Effect Size Measures",
+    "text": "Effect Size Measures\nCohen’s d\nStandardized mean difference:\nFor one sample: \\(d = \\frac{\\bar{x} - \\mu_0}{s}\\)\nFor two independent samples: \\(d = \\frac{\\bar{x}_1 - \\bar{x}_2}{s_p}\\)\n\n\n\n\\(s_p\\)\n\n\npooled standard deviation\n\n\n\n\n0.2\n\n\nSmall effect\n\n\n\n\n0.5\n\n\nMedium effect\n\n\n\n\n0.8\n\n\nLarge effect"
+  },
+  {
+    "objectID": "test_stat.html#non-parametric-tests",
+    "href": "test_stat.html#non-parametric-tests",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "Non-Parametric Tests",
+    "text": "Non-Parametric Tests\nMann-Whitney U Test (Wilcoxon Rank-Sum)\nNon-parametric alternative to two-sample t-test:\nTest statistic: \\[U = \\min(U_1, U_2)\\] where: \\[U_1 = n_1n_2 + \\frac{n_1(n_1+1)}{2} - R_1\\] \\[U_2 = n_1n_2 + \\frac{n_2(n_2+1)}{2} - R_2\\]\n\n\\(R_1, R_2\\) = sum of ranks for groups 1 and 2\nTests whether distributions differ in location"
+  },
+  {
+    "objectID": "test_stat.html#chi-square-tests",
+    "href": "test_stat.html#chi-square-tests",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "Chi-Square Tests",
+    "text": "Chi-Square Tests\nChi-Square Goodness of Fit Test\nTests whether observed frequencies match expected distribution:\nTest statistic: \\[\\chi^2 = \\sum \\frac{(O_i - E_i)^2}{E_i}\\]\nwhere:\n\n\n\n\\(O_i\\)\n\n\nobserved frequency in category i\n\n\n\n\n\\(E_i\\)\n\n\nexpected frequency in category i\n\n\n\n\n\\(df\\)\n\n\n\\(k - 1\\)\n\n\n\n\n\\(k\\)\n\n\n# where k = number of categories"
+  },
+  {
+    "objectID": "test_stat.html#fishers-exact-test",
+    "href": "test_stat.html#fishers-exact-test",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "Fisher’s Exact Test",
+    "text": "Fisher’s Exact Test\nMathematical Basis\nExact test for 2×2 contingency tables:\nProbability of observed configuration: \\[p = \\frac{\\binom{a+b}{a} \\binom{c+d}{c} \\binom{a+c}{a} \\binom{b+d}{b}}{\\binom{n}{a+b}}\\]\nwhere the table is:\n         | Col1 | Col2 | Total\nRow1     |  a   |  b   | a+b\nRow2     |  c   |  d   | c+d\nTotal    | a+c  | b+d  | n\nUse when: Expected frequencies &lt; 5 or small sample sizes"
+  },
+  {
+    "objectID": "test_stat.html#anova-analysis-of-variance",
+    "href": "test_stat.html#anova-analysis-of-variance",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "ANOVA (Analysis of Variance)",
+    "text": "ANOVA (Analysis of Variance)\nOne-Way ANOVA\nTests equality of means across 3+ groups:\nF-statistic: \\(F = \\frac{MS_{B}}{MS_{W}}\\)\nwhere:\n\n\n\nMSB\n\n\n\\(MS_B = \\frac{SS_B}{df_B}\\)\n\n\n\\(df_{B} = k - 1\\)\n\n\n\n\nMSW\n\n\n\\(MS_W = \\frac{SS_W}{df_W}\\)\n\n\n\\(df_{W} = N - k\\)\n\n\n\n\nSSB\n\n\n\\(SS_B = \\sum n_i(\\bar{x}_i - \\bar{x})^2\\)\n\n\n\n\n\n\nSSW\n\n\n\\(SS_W = \\sum \\sum (x_{ij} - \\bar{x}_i)^2\\)\n\n\n\n\n\n\nB = Between\nW = Within"
+  },
+  {
+    "objectID": "test_stat.html#assumption-checking",
+    "href": "test_stat.html#assumption-checking",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "Assumption Checking",
+    "text": "Assumption Checking\nNormality Tests"
+  },
+  {
+    "objectID": "test_stat.html#power-analysis",
+    "href": "test_stat.html#power-analysis",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "Power Analysis",
+    "text": "Power Analysis\nSample Size Calculation\nFor t-test: \\[n = \\left( \\frac{(z_{1-\\alpha/2} + z_{1-\\beta}) \\cdot \\sigma}{\\delta} \\right)^2\\]\nwhere:\n\n\n\n\\(\\alpha\\)\n\n\nsig. level\n\n\n\n\n\\(\\beta\\)\n\n\nType II error rate\n\n\n\n\n\\(1-\\beta\\)\n\n\npower\n\n\n\n\n\\(\\delta\\)\n\n\neffect size\n\n\n\n\n\\(\\sigma\\)\n\n\nstandard deviation"
+  },
+  {
+    "objectID": "test_stat.html#summary-table-of-tests",
+    "href": "test_stat.html#summary-table-of-tests",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "Summary Table of Tests",
+    "text": "Summary Table of Tests\n\n\n\n\n\n\n\n\n\nTest\nPurpose\nR Function\nKey Assumptions\n\n\n\n\nOne-sample t-test\nCompare mean to value\nt.test(x, mu)\nNormality, independence\n\n\nTwo-sample t-test\nCompare two means\nt.test(x, y)\nNormality, equal variances*\n\n\nPaired t-test\nCompare paired means\nt.test(x, y, paired=TRUE)\nNormality of differences\n\n\nMann-Whitney\nNon-parametric two samples\nwilcox.test(x, y)\nIndependent samples\n\n\nWilcoxon signed-rank\nNon-parametric paired\nwilcox.test(x, y, paired=TRUE)\nPaired data\n\n\nChi-square\nCategorical association\nchisq.test(table)\nExpected frequencies ≥ 5\n\n\nFisher’s exact\nSmall contingency tables\nfisher.test(table)\nFixed margins\n\n\nANOVA\nCompare 3+ means\naov(y ~ group)\nNormality, equal variances\n\n\n\n*Welch’s t-test doesn’t assume equal variances"
+  },
+  {
+    "objectID": "test_stat.html#best-practices",
+    "href": "test_stat.html#best-practices",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "Best Practices",
+    "text": "Best Practices\n\nAlways check assumptions before interpreting results\nUse non-parametric tests when assumptions are violated\nReport effect sizes along with p-values\nConsider multiple testing corrections when appropriate\nUse confidence intervals to understand precision\nVisualize your data before running tests"
+  },
+  {
+    "objectID": "qmd/other.html#contexte-et-motivation",
+    "href": "qmd/other.html#contexte-et-motivation",
+    "title": "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022",
+    "section": "Contexte et motivation",
+    "text": "Contexte et motivation\nL’analyse des effectifs scolaires est essentielle pour le suivi, la planification et l’évaluation du système éducatif tunisien.\nElle permet d’identifier les disparités régionales, par niveau et par sexe, influençant les politiques éducatives et l’allocation des ressources.",
+    "crumbs": [
+      "Other",
+      "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022"
+    ]
+  },
+  {
+    "objectID": "qmd/other.html#problématique",
+    "href": "qmd/other.html#problématique",
+    "title": "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022",
+    "section": "Problématique",
+    "text": "Problématique\n\nComment sont répartis les élèves selon les niveaux scolaires et les régions ?\n\nExiste-t-il des déséquilibres entre garçons et filles ?\n\nQuels niveaux ou régions concentrent le plus ou le moins d’élèves ?",
+    "crumbs": [
+      "Other",
+      "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022"
+    ]
+  },
+  {
+    "objectID": "qmd/other.html#objectifs",
+    "href": "qmd/other.html#objectifs",
+    "title": "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022",
+    "section": "Objectifs",
+    "text": "Objectifs\n\nDécrire la population scolaire par sexe, niveau et région\n\nIdentifier les disparités régionales et par niveau\n\nComparer les proportions de garçons et de filles par région\n\nDéterminer les niveaux les plus et les moins peuplés\n\nProduire des visualisations claires pour la prise de décision",
+    "crumbs": [
+      "Other",
+      "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022"
+    ]
+  },
+  {
+    "objectID": "qmd/other.html#dataset",
+    "href": "qmd/other.html#dataset",
+    "title": "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022",
+    "section": "Dataset",
+    "text": "Dataset\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Other",
+      "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022"
+    ]
+  },
+  {
+    "objectID": "qmd/other.html#analyse-exploratoire",
+    "href": "qmd/other.html#analyse-exploratoire",
+    "title": "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022",
+    "section": "Analyse exploratoire",
+    "text": "Analyse exploratoire\nAperçu des données\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Other",
+      "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022"
+    ]
+  },
+  {
+    "objectID": "qmd/other.html#répartition-par-sexe",
+    "href": "qmd/other.html#répartition-par-sexe",
+    "title": "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022",
+    "section": "Répartition par sexe",
+    "text": "Répartition par sexe\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Other",
+      "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022"
+    ]
+  },
+  {
+    "objectID": "qmd/other.html#répartition-par-niveau-scolaire",
+    "href": "qmd/other.html#répartition-par-niveau-scolaire",
+    "title": "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022",
+    "section": "Répartition par niveau scolaire",
+    "text": "Répartition par niveau scolaire\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Other",
+      "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022"
+    ]
+  },
+  {
+    "objectID": "qmd/other.html#répartition-par-région",
+    "href": "qmd/other.html#répartition-par-région",
+    "title": "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022",
+    "section": "Répartition par région",
+    "text": "Répartition par région\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Other",
+      "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022"
+    ]
+  },
+  {
+    "objectID": "qmd/other.html#comparaison-garçonsfilles-par-région",
+    "href": "qmd/other.html#comparaison-garçonsfilles-par-région",
+    "title": "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022",
+    "section": "Comparaison garçons/filles par région",
+    "text": "Comparaison garçons/filles par région\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Other",
+      "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022"
+    ]
+  },
+  {
+    "objectID": "qmd/other.html#topbottom-filles-par-région",
+    "href": "qmd/other.html#topbottom-filles-par-région",
+    "title": "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022",
+    "section": "Top/Bottom filles (%) par région",
+    "text": "Top/Bottom filles (%) par région\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Other",
+      "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022"
+    ]
+  },
+  {
+    "objectID": "qmd/other.html#conclusion",
+    "href": "qmd/other.html#conclusion",
+    "title": "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022",
+    "section": "Conclusion",
+    "text": "Conclusion\nCe projet met en lumière des déséquilibres éducatifs prononcés au sein du système tunisien, caractérisés par une concentration des effectifs dans les régions côtières du Nord et de l’Est, et un déficit marqué dans les régions du Sud et de l’intérieur. On observe également une décroissance préoccupante des effectifs à mesure que le niveau scolaire s’élève, signalant des défis de rétention et d’orientation. Si la parité filles-garçons est globalement respectée, les choix de spécialisation révèlent un déséquilibre au profit des filières perçues comme plus porteuses, telles que l’Économie-Gestion, au détriment d’autres domaines. Pour y répondre, une politique éducative territorialisée, un renforcement de l’orientation professionnelle et des investissements ciblés dans les infrastructures des zones défavorisées s’avèrent essentiels pour bâtir un système plus équitable et adapté aux besoins de tous les élèves. ## perspectives\nPerspectives : étendre l’analyse à plusieurs années, inclure le privé et d’autres indicateurs.",
+    "crumbs": [
+      "Other",
+      "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022"
+    ]
+  },
+  {
+    "objectID": "qmd/04-distributions-leaves.html",
+    "href": "qmd/04-distributions-leaves.html",
+    "title": "Projet AI for gaming",
+    "section": "",
+    "text": "The example aims to demonstrate estimation and interpretation of prediction intervals and confidence intervals. At the end, the two samples are compared with respect to variance and mean values.\nThe experimental hypotheses is, that the sampling strategy has an influence on the parameters of the distribution, i.e. that a sampling bias may occur. Here we leave it open, if the “subjective sampling” strategy prefers bigger or smaller leaves or if it has an influence on variance. The result is to be visualized with bar charts and box plots. We use the leave width as an example, an analysis of the other variables is left as an optional exercise.\nWe can now derive the following statistical hypotheses about the variance:\n\n\n\\(H_0\\): The variance of both samples is the same.\n\n\\(H_a\\): The samples have different variance.\n\nand about the mean:\n\n\n\\(H_0\\): The mean of both samples is the same.\n\n\\(H_a\\): The mean values of the samples are different.",
+    "crumbs": [
+      "Projects",
+      "Projet  AI for gaming"
+    ]
+  },
+  {
+    "objectID": "qmd/04-distributions-leaves.html#prepare-and-inspect-data",
+    "href": "qmd/04-distributions-leaves.html#prepare-and-inspect-data",
+    "title": "Projet AI for gaming",
+    "section": "\n3.1 Prepare and inspect data",
+    "text": "3.1 Prepare and inspect data\nThe data set is available from your local learning management system (LMS, e.g. OPAL at TU Dresden) or publicly from https://tpetzoldt.github.io/datasets/data/leaves.csv.\n\nDownload the data set leaves.csv and use one of RStudio’s “Import Dataset” wizards.\nAlternative: use read.csv().\n\n\nShow code#  ... do it\n\n\n\nplot everything, just for testing:\n\n\nShow codeplot(leaves)\n\n\n\nFirst, let’s apply a traditional approach and split leaves in two separate tables for the samples HSE and MHYB:\n\n\nShow codehyb &lt;- subset(leaves, group == \"HYB\")\nhse &lt;- subset(leaves, group == \"HSE\")\n\n\n\nThen, compare leaf width of both groups graphically:\n\n\nShow codeboxplot(hse$width, hyb$width, names=c(\"HSE\", \"HYB\"))",
+    "crumbs": [
+      "Projects",
+      "Projet  AI for gaming"
+    ]
+  },
+  {
+    "objectID": "qmd/04-distributions-leaves.html#check-distribution",
+    "href": "qmd/04-distributions-leaves.html#check-distribution",
+    "title": "Projet AI for gaming",
+    "section": "\n3.2 Check distribution",
+    "text": "3.2 Check distribution\n\nShow code# use `hist`, `qqnorm`, `qqline`\n# ...",
+    "crumbs": [
+      "Projects",
+      "Projet  AI for gaming"
+    ]
+  },
+  {
+    "objectID": "qmd/04-distributions-leaves.html#sample-statistics-and-prediction-interval",
+    "href": "qmd/04-distributions-leaves.html#sample-statistics-and-prediction-interval",
+    "title": "Projet AI for gaming",
+    "section": "\n3.3 Sample statistics and prediction interval",
+    "text": "3.3 Sample statistics and prediction interval\nIn a first analysis, we want to estimate the interval that covers 95% of leaves, defined by their width. As a first method, we take the empirical quantiles directly from the data. The method is also called “nonparametric,” because we don’t calculate mean and standard deviation and do not assume a normal or any other distribution.\n\nShow codequantile(hse$width, p = c(0.025, 0.975))\n\n\nNow, we compare this empirical result with a method that relies on a specific distribution. If our initial graphical visualization (e.g., the histogram) suggests the data is reasonably symmetric and bell-shaped, we can proceed with a parametric assumption.\nWe first calculate mean, sd, N and se for “hse” data set:\n\nShow codehse.mean &lt;- mean(hse$width)\nhse.sd   &lt;- sd(hse$width)\nhse.N    &lt;- length(hse$width)\nhse.se   &lt;- hse.sd/sqrt(hse.N)\n\n\nThen we estimate an approximate two-sided 95% prediction interval (\\(PI\\)) for the sample using a simplified approach based on the quantiles of the theoretical normal distribution (\\(z_{\\alpha/2} \\approx 1.96\\)) and the sample parameters mean \\(\\bar{x}\\) and standard deviation (\\(s\\)):\n\\[\nPI = \\bar{x} \\pm z \\cdot s\n\\]\nThis is the interval where we would predict a new single observation to fall with 95% confidence.\n\nShow codehse.95 &lt;- hse.mean + c(-1.96, 1.96) * hse.sd\nhse.95\n\n\nInstead of using 1.96, we could also use the quantile function qnorm(0.975) for the upper interval or qnorm(c(0.025, 0.975)) for the lower and upper in parallel:\n\nShow codehse.95 &lt;- hse.mean + qnorm(c(0.025, 0.975)) * hse.sd\nhse.95\n\n\nNow we plot the data and indicate the 95% interval:\n\nShow codeplot(hse$width)\nabline(h = hse.95, col=\"red\")\n\n\n… and the same as histogram:\n\nShow codehist(hse$width)\nabline(v = hse.95, col=\"red\")\nrug(hse$width, col=\"blue\")",
+    "crumbs": [
+      "Projects",
+      "Projet  AI for gaming"
+    ]
+  },
+  {
+    "objectID": "qmd/04-distributions-leaves.html#confidence-interval-of-the-mean",
+    "href": "qmd/04-distributions-leaves.html#confidence-interval-of-the-mean",
+    "title": "Projet AI for gaming",
+    "section": "\n3.4 Confidence interval of the mean",
+    "text": "3.4 Confidence interval of the mean\nThe confidence interval (\\(CI\\)) of the mean tells us how precise a mean value was estimated from data. If the sample size is “large enough”, the distribution of the raw data does not necessarily need to be normal, because then mean values tend to approximate a normal distribution due to the central limit theorem.\nThe formula for the CI of the mean is: \\[CI = \\bar{x} \\pm t_{\\alpha/2, n-1} \\cdot \\frac{s}{\\sqrt{N}}\\]\n\n3.4.1 Confidence interval of the mean for the “hse” data\nTask: Calculate the confidence interval of the mean value of the “hse” data set using the quantile function (qt) of the t-distribution1:\n\nShow codehse.ci &lt;- hse.mean + qt(p = c(0.025, 0.975), df = hse.N - 1) * hse.se\n\n\nNow indicate the confidence interval of the mean in the histogram.\n\nShow codeabline(v = hse.ci, col=\"magenta\")\n\n\n\n3.4.2 Confidence interval for the mean of the “hyb” data\n\nShow code#  Do the same for the \"hyb\" data, calculate mean, sd, N, se and ci.\n# ...\n\n\n\n3.4.3 Discussion: Comparison and interpretation\nExplain the fundamental statistical reason why the 95% Prediction Interval (PI) for the leaf width is always significantly wider than the 95% Confidence Interval (CI) for the mean leaf width, even though both intervals are calculated from the same data set (hse).",
+    "crumbs": [
+      "Projects",
+      "Projet  AI for gaming"
+    ]
+  },
+  {
+    "objectID": "qmd/04-distributions-leaves.html#comparison-of-the-samples",
+    "href": "qmd/04-distributions-leaves.html#comparison-of-the-samples",
+    "title": "Projet AI for gaming",
+    "section": "\n3.5 Comparison of the samples",
+    "text": "3.5 Comparison of the samples\nTo compare the two samples. we already created box plots at the beginning. Instead of a boxplot, we can also use a bar chart with confidence intervals.\nThis can be done with the add-on package gplots (not to be confused with ggplot):\nSolution A) with package gplots\n\nShow codelibrary(\"gplots\")\nbarplot2(height = c(hyb.mean, hse.mean),\n         ci.l   = c(hyb.ci[1], hse.ci[1]),\n         ci.u   = c(hyb.ci[2], hse.ci[2]),\n         plot.ci = TRUE,\n         names.arg=c(\"Hyb\", \"HSE\")\n)\n\n\nSolution B) without add-on packages (optional)\nHere we use a standard bar chart, and line segments for the error bars. One small problem arises, because barplot creates an own x-scaling. The good news is, that barplot returns its x-scale. We can store it in a variable, e.g. x that can then be used in subsequent code.\n\nShow codex &lt;- barplot(c(hyb.mean, hse.mean),\n  names.arg=c(\"HYB\", \"HSE\"), ylim=c(0, 150))\nsegments(x0=x[1], y0=hyb.ci[1], y1=hyb.ci[2], lwd=2)\nsegments(x0=x[2], y0=hse.ci[1], y1=hse.ci[2], lwd=2)",
+    "crumbs": [
+      "Projects",
+      "Projet  AI for gaming"
+    ]
+  },
+  {
+    "objectID": "qmd/04-distributions-leaves.html#is-the-difference-between-the-samples-statistically-significant",
+    "href": "qmd/04-distributions-leaves.html#is-the-difference-between-the-samples-statistically-significant",
+    "title": "Projet AI for gaming",
+    "section": "\n3.6 Is the difference between the samples statistically significant?",
+    "text": "3.6 Is the difference between the samples statistically significant?\nIn the following, we compare the two samples with t- and F-Tests.\nHypotheses:\n\\(H_0\\): Both samples have the same mean width and variance.\n\\(H_A\\): The mean width (and possibly also the variance) differ because of more subjective sampling of HSE students. They may have prefered bigger or the nice small leaves.\n\nShow codet.test(width ~ group, data = leaves)\n\n\nPerform also the classical t-test (var.equal=TRUE) and the F-test (var.test). Calculate absolute and relative effect size (mean differences) and interpret the results of all 3 tests.\n\nShow code# var.test(...)\n# t.test(...)\n# ...",
+    "crumbs": [
+      "Projects",
+      "Projet  AI for gaming"
+    ]
+  },
+  {
+    "objectID": "qmd/04-distributions-leaves.html#calculation-of-summary-statistics-with-dplyr",
+    "href": "qmd/04-distributions-leaves.html#calculation-of-summary-statistics-with-dplyr",
+    "title": "Projet AI for gaming",
+    "section": "\n4.1 Calculation of summary statistics with dplyr\n",
+    "text": "4.1 Calculation of summary statistics with dplyr\n\n\nShow codelibrary(\"dplyr\")\nleaves &lt;- read.csv(\"data/leaves.csv\")\n\nstats &lt;-\n  leaves |&gt;\n    group_by(group) |&gt;\n    summarize(mean = mean(width), sd = sd(width),\n              N = length(width), se = sd/sqrt(N),\n              lwr = mean + qt(p = 0.025, df = N-1) * se,\n              upr = mean + qt(p = 0.975, df = N-1) * se\n             )\n\nstats",
+    "crumbs": [
+      "Projects",
+      "Projet  AI for gaming"
+    ]
+  },
+  {
+    "objectID": "qmd/04-distributions-leaves.html#barchart-and-errorbars-with-ggplot2",
+    "href": "qmd/04-distributions-leaves.html#barchart-and-errorbars-with-ggplot2",
+    "title": "Projet AI for gaming",
+    "section": "\n4.2 Barchart and errorbars with ggplot2\n",
+    "text": "4.2 Barchart and errorbars with ggplot2\n\n\nShow codelibrary(\"ggplot2\")\nstats |&gt;\n  ggplot(aes(x=group, y=mean, min=lwr, max=upr))  +\n    geom_col() + geom_errorbar(width=0.2)",
+    "crumbs": [
+      "Projects",
+      "Projet  AI for gaming"
+    ]
+  },
+  {
+    "objectID": "qmd/04-distributions-leaves.html#a-footnote-about-prediction-intervals",
+    "href": "qmd/04-distributions-leaves.html#a-footnote-about-prediction-intervals",
+    "title": "Projet AI for gaming",
+    "section": "\n4.3 A footnote about prediction intervals",
+    "text": "4.3 A footnote about prediction intervals\nThe simplified \\(\\bar{x} \\pm z \\cdot s\\) formula used above is an approximation. A statistically rigorous 95% prediction interval, especially for smaller samples, needs two corrections.\nFirst, we would use the t-distribution with the quantile \\(t_{\\alpha/2, n-1}\\) (or qt(alpha/2, n-1) in R) instead of the normal quantiles (\\(\\pm 1.96\\)). Then we add a term \\(\\sqrt{1+1/N}\\) that corrects for the sample parameters. The full formula for a single future observation is then:\n\\[\\text{PI} = \\bar{x} \\pm t_{\\alpha/2, n-1} \\cdot s \\cdot \\sqrt{1 + \\frac{1}{N}}\\]\nThe prediction interval is related to the so-called “tolerance interval”. Both are the same if the population parameters \\(\\mu, \\sigma\\) are known or the sample size is very big. However, there are theoretical and practical differences in case of small sample size.",
+    "crumbs": [
+      "Projects",
+      "Projet  AI for gaming"
+    ]
+  },
+  {
+    "objectID": "qmd/04-distributions-leaves.html#footnotes",
+    "href": "qmd/04-distributions-leaves.html#footnotes",
+    "title": "Projet AI for gaming",
+    "section": "Footnotes",
+    "text": "Footnotes\n\nas the sample size is not too small, you may also compare this with 1.96 or 2.0↩︎",
+    "crumbs": [
+      "Projects",
+      "Projet  AI for gaming"
+    ]
+  },
+  {
+    "objectID": "qmd/02-discharge-elbe-project.html",
+    "href": "qmd/02-discharge-elbe-project.html",
+    "title": "Analyse des emotion et satisfaction des joueurs contre les nouvelle technologie dans les jeus video",
+    "section": "",
+    "text": "The project is related to the lab exercise “Discharge of River Elbe: Date and Time Computation, Data Management and Plotting with R”."
+  },
+  {
+    "objectID": "qmd/02-discharge-elbe-project.html#outline",
+    "href": "qmd/02-discharge-elbe-project.html#outline",
+    "title": "Analyse des emotion et satisfaction des joueurs contre les nouvelle technologie dans les jeus video",
+    "section": "\n3.1 Outline",
+    "text": "3.1 Outline\nCombine all tasks together and tell a story, using a standard scientific outline, the so-called IMRAD scheme:\n\nIntroduction\nMethods\nResults\nDiscussion\nReferences\n\nPlease consult Wikipedia for a detailed explanation.\nAs it is a tiny report, Methods and Results may be merged in this case. However, Introduction and Discussion must be separated. Use the internet and find about 2-3 literature references for the Discussion."
+  },
+  {
+    "objectID": "qmd/02-discharge-elbe-project.html#workflow",
+    "href": "qmd/02-discharge-elbe-project.html#workflow",
+    "title": "Analyse des emotion et satisfaction des joueurs contre les nouvelle technologie dans les jeus video",
+    "section": "\n3.2 Workflow",
+    "text": "3.2 Workflow\n\nDraft: draft your report. The first draft is usually somewhat longer.\nRefine: Discuss and select only the most important parts, and create the final version adhering to the page limit.\n\nCommunicate in your team, with other teams and with tutors\n\nPrimary Goal: Communication should promote community learning. Post approaches and specific questions in the Matrix^Matrix chat group so everyone can benefit.\nTeamwork: Discuss ideas within your team and with other colleagues first. Private channels for teamwork are allowed.\nIn the chatroom, please formulate specific questions (e.g., “How to format the numbers on a log-transformed axis?”) and avoid asking only, “Is this correct?”\nContribute: Actively contribute to answering your classmates’ questions!"
+  },
+  {
+    "objectID": "qmd/02-discharge-elbe-project.html#report-formatting-instructions",
+    "href": "qmd/02-discharge-elbe-project.html#report-formatting-instructions",
+    "title": "Analyse des emotion et satisfaction des joueurs contre les nouvelle technologie dans les jeus video",
+    "section": "\n3.3 Report formatting instructions",
+    "text": "3.3 Report formatting instructions\nTo ensure clarity and efficiency, please adhere to the following strict page limits and formatting guidelines.\n\n3.3.1 Page limits and content focus\n\nCore Content Limit: The main body of the report (Introduction, Methods & Results, Discussion) must not exceed 4 A4 pages.\nThis limit forces you to distill the essential messages and choose only the most important figures.\nThe Title Page (Cover Sheet) and the List of References do not count towards the 4-page limit.\nQuality First: The goal is Quality instead of quantity! Use the limited space to focus on the interpretation and discussion of your findings.\n\n3.3.2 Text and visual balance\n\nThe report must have a good balance between explanatory text and supporting figures/tables.\nAvoid reports that are dominated by either large amounts of text or excessive, unexplained graphics.\nSelectivity: Only include figures and statistical output that are essential to support your claims in the text. Avoid “dumping” unnecessary output.\n\n3.3.3 Readability and citation standards\n\nUse a font size of 11 or 12 points.\nA line spacing of 1.2 lines is recommended to improve readability.\nFigures: font size of annotations must be well readable.\nCitation: Cite literature properly using the author-year style. Good examples can be found at the APA style web page."
+  },
+  {
+    "objectID": "qmd/02-discharge-elbe-project.html#submission",
+    "href": "qmd/02-discharge-elbe-project.html#submission",
+    "title": "Analyse des emotion et satisfaction des joueurs contre les nouvelle technologie dans les jeus video",
+    "section": "\n3.4 Submission",
+    "text": "3.4 Submission\nYou will have 2.5 weeks time for the preparation of the report. Then upload it as PDF or HTML document and (optionally) your .R or Quarto (.qmd) scripts to the File folder of your group in the OPAL learning management system. Submissions after the deadline cannot be considered."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Portfolio Personnel – Nada Said",
+    "section": "",
+    "text": "Je suis étudiante en cycle ingénieur en génie informatique, spécialisée en Data Science et Intelligence Artificielle. Passionnée par l’analyse de données, le machine learning et la résolution de problèmes complexes, je cherche un stage de fin d’études pour appliquer mes compétences dans un environnement concret et innovant.\n📍 Sousse, Tunisie\n📧 nadaasaid9@gmail.com\n📞 +216 52 073 876\n\nGitHub\nLinkedIn"
+  },
+  {
+    "objectID": "index.html#à-propos-de-moi",
+    "href": "index.html#à-propos-de-moi",
+    "title": "Portfolio Personnel – Nada Said",
+    "section": "",
+    "text": "Je suis étudiante en cycle ingénieur en génie informatique, spécialisée en Data Science et Intelligence Artificielle. Passionnée par l’analyse de données, le machine learning et la résolution de problèmes complexes, je cherche un stage de fin d’études pour appliquer mes compétences dans un environnement concret et innovant.\n📍 Sousse, Tunisie\n📧 nadaasaid9@gmail.com\n📞 +216 52 073 876\n\nGitHub\nLinkedIn"
+  },
+  {
+    "objectID": "index.html#expériences-professionnelles",
+    "href": "index.html#expériences-professionnelles",
+    "title": "Portfolio Personnel – Nada Said",
+    "section": "2 Expériences professionnelles",
+    "text": "2 Expériences professionnelles\n\n2.1 Stagiaire en Développement Full Stack – Edidact\nJuin - juillet 2024\n\nConception d’interface utilisateur (UX/UI) avec Figma.\nDéveloppement front-end avec React.js et JavaScript.\nBack-end avec Node.js et Express.js.\nIntégration d’API REST pour des mises à jour dynamiques.\n\nStack : React.js, JavaScript, Node.js, Express.js, Figma, GitHub.\n\n\n2.2 Stagiaire en Développement IA & IoT – STEG\nAvril - juin 2023\n\nDéveloppement d’une application IoT pour la commande à distance.\nIntégration de modules IA pour l’automatisation.\nTraitement des données avec Python.\nBase de données temps réel avec Firebase.\n\nStack : Python, Firebase, Raspberry Pi 4."
+  },
+  {
+    "objectID": "index.html#compétences-techniques",
+    "href": "index.html#compétences-techniques",
+    "title": "Portfolio Personnel – Nada Said",
+    "section": "3 Compétences techniques",
+    "text": "3 Compétences techniques\n\n3.0.1 Langages & Frameworks\n\nPython ⭐⭐⭐⭐⭐\nR ⭐⭐⭐⭐⭐\nJava ⭐⭐☆☆☆\nReact ⭐⭐⭐☆☆\nAngular ⭐⭐☆☆☆"
+  },
+  {
+    "objectID": "qmd/01-pivot-tables-with-libreoffice.html",
+    "href": "qmd/01-pivot-tables-with-libreoffice.html",
+    "title": "Analyse sur les élèves inscrits dans les établissements scolaires publics en 2021/2022",
+    "section": "",
+    "text": "L’analyse des effectifs scolaires constitue un outil essentiel pour le suivi, la planification et l’évaluation des systèmes éducatifs. En Tunisie, la répartition des élèves de l’enseignement public selon les régions, les niveaux scolaires et le sexe permet d’identifier des disparités territoriales et démographiques susceptibles d’influencer les politiques éducatives.\nCe projet vise à analyser la répartition des effectifs des élèves de l’enseignement public en Tunisie durant l’année scolaire 2021–2022 à l’aide d’outils d’analyse descriptive et statistique sous R. L’objectif est de produire des indicateurs synthétiques utiles au suivi et à l’évaluation du système éducatif.\nObjectifs spécifiques :\n\nAnalyser la répartition des élèves par sexe\nExaminer la distribution par niveau scolaire\nÉtudier les disparités régionales\nCroiser les dimensions sexe et région\nProduire des visualisations claires et informatives",
+    "crumbs": [
+      "Projects",
+      "Analyse sur les élèves inscrits dans les établissements scolaires publics en 2021/2022"
+    ]
+  },
+  {
+    "objectID": "qmd/01-pivot-tables-with-libreoffice.html#introduction",
+    "href": "qmd/01-pivot-tables-with-libreoffice.html#introduction",
+    "title": "Analyse sur les élèves inscrits dans les établissements scolaires publics en 2021/2022",
+    "section": "",
+    "text": "L’analyse des effectifs scolaires constitue un outil essentiel pour le suivi, la planification et l’évaluation des systèmes éducatifs. En Tunisie, la répartition des élèves de l’enseignement public selon les régions, les niveaux scolaires et le sexe permet d’identifier des disparités territoriales et démographiques susceptibles d’influencer les politiques éducatives.\nCe projet vise à analyser la répartition des effectifs des élèves de l’enseignement public en Tunisie durant l’année scolaire 2021–2022 à l’aide d’outils d’analyse descriptive et statistique sous R. L’objectif est de produire des indicateurs synthétiques utiles au suivi et à l’évaluation du système éducatif.\nObjectifs spécifiques :\n\nAnalyser la répartition des élèves par sexe\nExaminer la distribution par niveau scolaire\nÉtudier les disparités régionales\nCroiser les dimensions sexe et région\nProduire des visualisations claires et informatives",
+    "crumbs": [
+      "Projects",
+      "Analyse sur les élèves inscrits dans les établissements scolaires publics en 2021/2022"
+    ]
+  },
+  {
+    "objectID": "qmd/01-pivot-tables-with-libreoffice.html#description-des-données",
+    "href": "qmd/01-pivot-tables-with-libreoffice.html#description-des-données",
+    "title": "Analyse sur les élèves inscrits dans les établissements scolaires publics en 2021/2022",
+    "section": "2 Description des données",
+    "text": "2 Description des données\n\n2.1 Source et importation des données\nLes données utilisées proviennent d’un fichier CSV contenant les effectifs des élèves inscrits dans les établissements scolaires publics tunisiens pour l’année scolaire 2021–2022. Les variables décrivent l’année scolaire, la région (CRE), le niveau scolaire, le sexe et l’effectif correspondant.\n\n\n2.2 Importation du fichier CSV\nDans cette étape, le fichier de données au format CSV est importé à l’aide de la fonction read.csv(), qui permet de lire des données tabulaires dans R. Le séparateur utilisé est le point-virgule, et les chaînes de caractères sont conservées telles quelles sans conversion automatique en facteurs.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\n\n2.3 Aperçu du jeu de données:\nCette étape permet de vérifier la structure, la dimension et la qualité globale des données avant toute analyse.\n\nAperçu général\n\nLe dataset listings contient 1664 observations et 6 variables sur les élèves inscrits dans les établissements scolaires publics pour l’année scolaire 2021/2022. Il inclut : l’année scolaire (annee_scolaire), le code et le nom de la circonscription régionale (Ordre_CRE, Nom_CRE), le niveau scolaire (Niveau_scolaire), le sexe (Sexe) et l’effectif des élèves (Effectif_eleves). Les effectifs varient de 0 à 9133 élèves, avec une moyenne d’environ 1326 par ligne. Ce dataset permet d’analyser la répartition des élèves par niveau, sexe et CRE, et d’étudier l’effectif scolaire et l’équité territoriale.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nVérifier les valeurs manquantes:\n\nL’exploration des données montre qu’il n’existe aucune valeur manquante ni chaîne vide, ce qui signifie que le dataset est complet et propre.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nVérifier les doublons:\n\nL’analyse du dataset listings montre qu’il ne contient aucune ligne dupliquée\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Projects",
+      "Analyse sur les élèves inscrits dans les établissements scolaires publics en 2021/2022"
+    ]
+  },
+  {
+    "objectID": "qmd/01-pivot-tables-with-libreoffice.html#analyse-exploratoire",
+    "href": "qmd/01-pivot-tables-with-libreoffice.html#analyse-exploratoire",
+    "title": "Analyse sur les élèves inscrits dans les établissements scolaires publics en 2021/2022",
+    "section": "3 Analyse exploratoire",
+    "text": "3 Analyse exploratoire\n\n3.1 Nettoyage et préparation des données\nCette étape vise à améliorer la lisibilité des variables, à harmoniser les valeurs textuelles, à standardiser la variable sexe et à convertir les colonnes dans des formats adaptés à l’analyse statistique.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Projects",
+      "Analyse sur les élèves inscrits dans les établissements scolaires publics en 2021/2022"
+    ]
+  },
+  {
+    "objectID": "qmd/01-pivot-tables-with-libreoffice.html#résultats",
+    "href": "qmd/01-pivot-tables-with-libreoffice.html#résultats",
+    "title": "Analyse sur les élèves inscrits dans les établissements scolaires publics en 2021/2022",
+    "section": "4 Résultats",
+    "text": "4 Résultats\n\n4.1 Répartition par sexe\nCette section fournit des indicateurs synthétiques permettant d’avoir une vision d’ensemble de la population scolaire. Elle calcule le nombre total d’élèves par sexe.\nLe graphique montre que le nombre de filles (1 125 129) est légèrement supérieur à celui des garçons (1 080 842) dans l’enseignement public pour l’année scolaire 2021–2022. Cette répartition indique que la population scolaire est globalement équilibrée entre les sexes, avec une légère majorité de filles.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\n\n\n4.2 Répartition par niveau scolaire\nLe graphique montre un effectif très élevé dans les classes de primaire, mais une diminution progressive au fur et à mesure que les niveaux scolaires avancent. Cette baisse pourrait refléter des difficultés d’étude au secondaire et au collège, pouvant être liées à l’abandon scolaire ou à la sélection entre les cycles.\nOn observe également une différence marquée entre les orientations au secondaire. Des spécialités comme le Sport attirent relativement peu d’élèves, tandis que l’orientation Économie et Gestion arrive en première position, suivie des Sciences, puis des Sciences Techniques.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\n\n4.3 Répartition régionale des effectifs scolaires\nCe graphique montre que la région de Nabeul a le plus grand effectif, suivie par Sousse et Ben Arous. Les dernières places sont occupées par Kebili, Tataouine et Tozeur. Cela pourrait indiquer une disparité régionale, où les régions du Nord ont une participation plus élevée, tandis que celles du Sud et du Sud-Est sont moins représentées, peut-être en raison de facteurs socio-économiques, géographiques ou de différences dialectales.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\n\n\n4.4 Répartition des élèves par sexe et par région\nCe graphique met en lumière une forte inégalité géographique dans la répartition des effectifs scolaires en Tunisie, avec un clivage net entre les régions côtières développées et les régions intérieures et méridionales. Bien que la parité filles-garçons soit globalement atteinte, les disparités régionales soulignent la nécessité de politiques éducatives ciblées pour renforcer l’accès et la rétention scolaire dans les zones défavorisées.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Projects",
+      "Analyse sur les élèves inscrits dans les établissements scolaires publics en 2021/2022"
+    ]
+  },
+  {
+    "objectID": "qmd/01-pivot-tables-with-libreoffice.html#analyse-synthétique",
+    "href": "qmd/01-pivot-tables-with-libreoffice.html#analyse-synthétique",
+    "title": "Analyse sur les élèves inscrits dans les établissements scolaires publics en 2021/2022",
+    "section": "5 Analyse synthétique",
+    "text": "5 Analyse synthétique\n\n5.1 Indicateurs complémentaires\n\nCalcul des indicateurs régionaux\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nLe TOP 5 des régions avec le PLUS de filles (%) et le TOP 5 avec le MOINS de filles (%)\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nLe Top 5 régions avec le moinset (%) et le plus (%) de garçons\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nLe Top 5 niveaux les PLUS peuplés\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nLe Top 5 niveaux les MOINS peuplés\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nLe Top 3 et Bottom 3 niveaux scolaires par région le plus moins eleves.\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Projects",
+      "Analyse sur les élèves inscrits dans les établissements scolaires publics en 2021/2022"
+    ]
+  },
+  {
+    "objectID": "qmd/01-pivot-tables-with-libreoffice.html#discussion",
+    "href": "qmd/01-pivot-tables-with-libreoffice.html#discussion",
+    "title": "Analyse sur les élèves inscrits dans les établissements scolaires publics en 2021/2022",
+    "section": "6 Discussion",
+    "text": "6 Discussion\nCette analyse met en évidence les déséquilibres structurels et territoriaux qui caractérisent le système éducatif tunisien. La concentration des effectifs dans les régions côtières du Nord et de l’Est, au détriment des régions de l’intérieur et du Sud, révèle une migration interne importante, souvent motivée par les inégalités économiques et l’accès aux opportunités. Ces flux accentuent les disparités en termes d’infrastructures scolaires, de ressources enseignantes et de conditions d’apprentissage, creusant ainsi un écart éducatif entre les territoires.\nSur le plan de l’orientation scolaire, on observe une forte polarisation vers les filières perçues comme porteuses (Économie et Gestion, Sciences), tandis que d’autres spécialités (Sport, Lettre) restent marginalisées. Ce déséquilibre reflète une adéquation partielle entre la formation offerte et les besoins réels du marché du travail, risquant à terme de générer des pénuries de compétences dans certains secteurs et une saturation dans d’autres.\nEnfin, si la parité filles-garçons est globalement atteinte, elle masque des réalités locales différenciées, où les filles sont parfois majoritaires dans les régions les moins favorisées, possiblement en raison de stratégies familiales ou de migrations différenciées des garçons.\nEn somme, pour une éducation plus équitable et efficace, il est indispensable :\nD’adopter une approche territorialisée des politiques éducatives, ciblant les régions défavorisées par des investissements adaptés et des incitations pour le personnel enseignant.\nDe renforcer l’orientation scolaire en l’articulant mieux avec les perspectives économiques régionales et nationales, tout en valorisant la diversité des talents.\nD’intégrer la dimension migratoire dans la planification éducative, afin d’anticiper les variations démographiques et de garantir un accès durable à une éducation de qualité pour tous, quel que soit le lieu de résidence.\nUne telle approche holistique contribuerait à réduire les fractures éducatives, à optimiser les ressources et à préparer les jeunes aux défis socio-économiques futurs.",
+    "crumbs": [
+      "Projects",
+      "Analyse sur les élèves inscrits dans les établissements scolaires publics en 2021/2022"
+    ]
+  },
+  {
+    "objectID": "qmd/01-pivot-tables-with-libreoffice.html#conclusion",
+    "href": "qmd/01-pivot-tables-with-libreoffice.html#conclusion",
+    "title": "Analyse sur les élèves inscrits dans les établissements scolaires publics en 2021/2022",
+    "section": "7 Conclusion",
+    "text": "7 Conclusion\nCe projet met en lumière des déséquilibres éducatifs prononcés au sein du système tunisien, caractérisés par une concentration des effectifs dans les régions côtières du Nord et de l’Est, et un déficit marqué dans les régions du Sud et de l’intérieur. On observe également une décroissance préoccupante des effectifs à mesure que le niveau scolaire s’élève, signalant des défis de rétention et d’orientation. Si la parité filles-garçons est globalement respectée, les choix de spécialisation révèlent un déséquilibre au profit des filières perçues comme plus porteuses, telles que l’Économie-Gestion, au détriment d’autres domaines. Pour y répondre, une politique éducative territorialisée, un renforcement de l’orientation professionnelle et des investissements ciblés dans les infrastructures des zones défavorisées s’avèrent essentiels pour bâtir un système plus équitable et adapté aux besoins de tous les élèves.",
+    "crumbs": [
+      "Projects",
+      "Analyse sur les élèves inscrits dans les établissements scolaires publics en 2021/2022"
+    ]
+  },
+  {
+    "objectID": "qmd/03-discharge-elbe.html",
+    "href": "qmd/03-discharge-elbe.html",
+    "title": "Site Web des réservation des Hotéls",
+    "section": "",
+    "text": "This practical example demonstrates how daily discharge data of the Elbe River can be analyzed and visualized in R directly in a browser using Web-R.\nScientific aim: Learn date/time computation, data management, aggregation, and plotting.",
+    "crumbs": [
+      "Projects",
+      "Site Web des réservation des Hotéls"
+    ]
+  },
+  {
+    "objectID": "qmd/03-discharge-elbe.html#introduction",
+    "href": "qmd/03-discharge-elbe.html#introduction",
+    "title": "Site Web des réservation des Hotéls",
+    "section": "",
+    "text": "This practical example demonstrates how daily discharge data of the Elbe River can be analyzed and visualized in R directly in a browser using Web-R.\nScientific aim: Learn date/time computation, data management, aggregation, and plotting.",
+    "crumbs": [
+      "Projects",
+      "Site Web des réservation des Hotéls"
+    ]
+  },
+  {
+    "objectID": "qmd/03-discharge-elbe.html#methods",
+    "href": "qmd/03-discharge-elbe.html#methods",
+    "title": "Site Web des réservation des Hotéls",
+    "section": "2 Methods",
+    "text": "2 Methods\nWe demonstrate data import, conversion, aggregation, plotting, and pipeline usage using the tidyverse. Data are daily measurements for the Elbe River (m³/s) from Dresden, provided by BfG.",
+    "crumbs": [
+      "Projects",
+      "Site Web des réservation des Hotéls"
+    ]
+  },
+  {
+    "objectID": "qmd/03-discharge-elbe.html#exercises",
+    "href": "qmd/03-discharge-elbe.html#exercises",
+    "title": "Site Web des réservation des Hotéls",
+    "section": "3 Exercises",
+    "text": "3 Exercises\n\n3.1 1. Download the data and inspect it\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\n\n\n3.2 2. Create date categories\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\n\n\n3.3 3. Aggregate monthly data\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\n\n\n3.4 4. Average year plot\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\n\n\n3.5 5. Annual discharge sum\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\n\n\n3.6 6. Scatter plot per year\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\n\n\n3.7 7. Cumulative sum per year\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\n\n\n3.8 8. Min-Max Plot with ggplot2\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\n\n\n3.9 9. Pivot table (wide ↔︎ long)\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Projects",
+      "Site Web des réservation des Hotéls"
+    ]
+  },
+  {
+    "objectID": "qmd/06-classical-tests.html#preface",
+    "href": "qmd/06-classical-tests.html#preface",
+    "title": "Analyse descriptive des données et méthodes statistiques en R",
+    "section": "Preface",
+    "text": "Preface\nThe following exercises demonstrate some of the most common classical tests by means of simple examples.",
+    "crumbs": [
+      "Presentations",
+      "Classical Tests"
+    ]
+  },
+  {
+    "objectID": "qmd/06-classical-tests.html#a-sleep-duration-study-statistical-tests-of-location",
+    "href": "qmd/06-classical-tests.html#a-sleep-duration-study-statistical-tests-of-location",
+    "title": "Analyse descriptive des données et méthodes statistiques en R",
+    "section": "A sleep duration study: statistical tests of location",
+    "text": "A sleep duration study: statistical tests of location\nThe example is inspired by a classical test data set (Student, 1908) about a study with two groups of persons treated with two different pharmaceutical drugs.\nDrug 1: 8.7, 6.4, 7.8, 6.8, 7.9, 11.4, 11.7, 8.8, 8, 10\nDrug 2: 9.9, 8.8, 9.1, 8.1, 7.9, 12.4, 13.5, 9.6, 12.6, 11.4\nThe data are the duration of sleeping time in hours. It is assumed that the normal sleeping time would be 8 hours.",
+    "crumbs": [
+      "Presentations",
+      "Classical Tests"
+    ]
+  },
+  {
+    "objectID": "qmd/06-classical-tests.html#one-sample-t-test",
+    "href": "qmd/06-classical-tests.html#one-sample-t-test",
+    "title": "Analyse descriptive des données et méthodes statistiques en R",
+    "section": "One sample t-Test",
+    "text": "One sample t-Test\nLet’s test whether the drugs increased or decreased sleeping time, compared to 8 hours:\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Presentations",
+      "Classical Tests"
+    ]
+  },
+  {
+    "objectID": "qmd/06-classical-tests.html#two-sample-t-test",
+    "href": "qmd/06-classical-tests.html#two-sample-t-test",
+    "title": "Analyse descriptive des données et méthodes statistiques en R",
+    "section": "Two sample t-Test",
+    "text": "Two sample t-Test\nThe two sample t-Test is used to compare two groups of data: Related to our example, we test the following hypotheses:\n\\(H_0\\): Both drugs have the same effect.\n\\(H_A\\): The drugs have a different effect, i.e. one of the drugs is stronger.",
+    "crumbs": [
+      "Presentations",
+      "Classical Tests"
+    ]
+  },
+  {
+    "objectID": "qmd/06-classical-tests.html#paired-t-test",
+    "href": "qmd/06-classical-tests.html#paired-t-test",
+    "title": "Analyse descriptive des données et méthodes statistiques en R",
+    "section": "Paired t-test",
+    "text": "Paired t-test\nGiven is a number of students that passed an examination in statistics. The examination was written two times, one time before and one time after an additional series of lectures. The values represent the numbers of points approached during the examination. Check whether the additional lectures had any positive effect:\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Presentations",
+      "Classical Tests"
+    ]
+  },
+  {
+    "objectID": "qmd/06-classical-tests.html#wilcoxon-test-optional",
+    "href": "qmd/06-classical-tests.html#wilcoxon-test-optional",
+    "title": "Analyse descriptive des données et méthodes statistiques en R",
+    "section": "Wilcoxon test (optional)",
+    "text": "Wilcoxon test (optional)\nThe Mann-Whitney and Wilxon tests are nonparametric tests of location. “Nonparametric” means, that the general location of the distributions is compared and not a parameter like the mean. This makes the test independent of distributional assumptions, but can sometimes lead to a vague interpretations.",
+    "crumbs": [
+      "Presentations",
+      "Classical Tests"
+    ]
+  },
+  {
+    "objectID": "qmd/06-classical-tests.html#own-project-weight-of-clementine-fruits",
+    "href": "qmd/06-classical-tests.html#own-project-weight-of-clementine-fruits",
+    "title": "Analyse descriptive des données et méthodes statistiques en R",
+    "section": "Own project: Weight of Clementine fruits",
+    "text": "Own project: Weight of Clementine fruits\nImport the Clementines data set (fruits-2023-hse.csv)1.\n\nThink about an appropriate data structure and use a suitable statistical test to compare the weights.\nCheck variance homogeneity and normal distribution graphically.\nCan the weights from each brand be considered as independent samples?\n\nfruits.csv available from: https://tpetzoldt.github.io/datasets/data/fruits-2023-hse.csv",
+    "crumbs": [
+      "Presentations",
+      "Classical Tests"
+    ]
+  },
+  {
+    "objectID": "qmd/06-classical-tests.html#chi-squared-test-and-fishers-exact-test-optional",
+    "href": "qmd/06-classical-tests.html#chi-squared-test-and-fishers-exact-test-optional",
+    "title": "Analyse descriptive des données et méthodes statistiques en R",
+    "section": "Chi-squared test and Fisher’s exact test (optional)",
+    "text": "Chi-squared test and Fisher’s exact test (optional)\nIntroduction\nTaken from Agresti (2002), Fisher’s Tea Drinker:\n“A British woman claimed to be able to distinguish whether milk or tea was added to the cup first. To test, she was given 8 cups of tea, in four of which milk was added first. The null hypothesis is that there is no association between the true order of pouring and the woman’s guess, the alternative that there is a positive association (that the odds ratio is greater than 1).”",
+    "crumbs": [
+      "Presentations",
+      "Classical Tests"
+    ]
+  },
+  {
+    "objectID": "qmd/06-classical-tests.html#exercise-solutions",
+    "href": "qmd/06-classical-tests.html#exercise-solutions",
+    "title": "Analyse descriptive des données et méthodes statistiques en R",
+    "section": "Exercise Solutions",
+    "text": "Exercise Solutions",
+    "crumbs": [
+      "Presentations",
+      "Classical Tests"
+    ]
+  },
+  {
+    "objectID": "qmd/06-classical-tests.html#references",
+    "href": "qmd/06-classical-tests.html#references",
+    "title": "Analyse descriptive des données et méthodes statistiques en R",
+    "section": "References",
+    "text": "References\n\nStudent (1908) - The probable error of a mean\nDelacre et al. (2017) - Why psychologists should by default use Welch’s t-test instead of Student’s t-test\n\n\n\n\n\nDelacre, M., Lakens, D., & Leys, C. (2017). Why psychologists should by default use Welch’s t-test instead of Student’s t-test. International Review of Social Psychology, 30(1), 92–101. https://doi.org/10.5334/irsp.82\n\n\nStudent. (1908). The probable error of a mean. Biometrika, 6(1), 1–25. https://doi.org/10.2307/2331554",
+    "crumbs": [
+      "Presentations",
+      "Classical Tests"
+    ]
+  },
+  {
+    "objectID": "qmd/test_stat.html#statistical-testing-framework",
+    "href": "qmd/test_stat.html#statistical-testing-framework",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "Statistical Testing Framework",
+    "text": "Statistical Testing Framework",
+    "crumbs": [
+      "Projects",
+      "Statistical Tests with R - Complete Guide"
+    ]
+  },
+  {
+    "objectID": "qmd/test_stat.html#one-sample-t-test",
+    "href": "qmd/test_stat.html#one-sample-t-test",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "One Sample t-Test",
+    "text": "One Sample t-Test\nMathematical Foundation\nTests whether population mean \\(\\mu\\) equals specified value \\(\\mu_0\\):\nTest statistic: \\(t = \\dfrac{\\bar{x} - \\mu_0}{s/\\sqrt{n}}\\)\nwhere:\n\n\n\n\\(\\bar{x}\\)\n\n\nsample mean\n\n\n\n\n\\(s\\)\n\n\nsample standard deviation\n\n\n\n\n\\(n\\)\n\n\nsample size\n\n\n\n\n\\(df = n - 1\\)\n\n\ndegrees of freedom\n\n\n\n\n\n\nData are normally distributed\n\n\n\n\n\n\nObservations are independent",
+    "crumbs": [
+      "Projects",
+      "Statistical Tests with R - Complete Guide"
+    ]
+  },
+  {
+    "objectID": "qmd/test_stat.html#two-sample-t-test",
+    "href": "qmd/test_stat.html#two-sample-t-test",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "Two Sample t-Test",
+    "text": "Two Sample t-Test\nIndependent Samples t-Test\nTests whether two population means are equal:\nTest statistic: \\[t = \\frac{\\bar{x}_1 - \\bar{x}_2}{s_p \\sqrt{\\frac{1}{n_1} + \\frac{1}{n_2}}}\\]\nPooled standard deviation: \\[s_p = \\sqrt{\\frac{(n_1-1)s_1^2 + (n_2-1)s_2^2}{n_1 + n_2 - 2}}\\]\nDegrees of freedom: \\(df = n_1 + n_2 - 2\\)",
+    "crumbs": [
+      "Projects",
+      "Statistical Tests with R - Complete Guide"
+    ]
+  },
+  {
+    "objectID": "qmd/test_stat.html#paired-t-test",
+    "href": "qmd/test_stat.html#paired-t-test",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "Paired t-Test",
+    "text": "Paired t-Test\nMathematical Formulation\nTests mean difference between paired observations:\nTest statistic: \\(t = \\dfrac{\\bar{d}}{s_d/\\sqrt{n}}\\)\nwhere:\n\n\n\n\\(d_i = x_{i1} - x_{i2}\\)\n\n\npaired differences\n\n\n\n\n\\(\\bar{d}\\)\n\n\nmean of differences\n\n\n\n\n\\(s_d\\)\n\n\nstandard deviation of differences\n\n\n\n\n\\(n\\)\n\n\nnumber of pairs\n\n\n\n\n\\(df = n - 1\\)\n\n\ndegrees of freedom\n\n\n\n\n\n\nDifferences are normally distributed\n\n\n\n\n\n\nPairs are dependent/related",
+    "crumbs": [
+      "Projects",
+      "Statistical Tests with R - Complete Guide"
+    ]
+  },
+  {
+    "objectID": "qmd/test_stat.html#effect-size-measures",
+    "href": "qmd/test_stat.html#effect-size-measures",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "Effect Size Measures",
+    "text": "Effect Size Measures\nCohen’s d\nStandardized mean difference:\nFor one sample: \\(d = \\frac{\\bar{x} - \\mu_0}{s}\\)\nFor two independent samples: \\(d = \\frac{\\bar{x}_1 - \\bar{x}_2}{s_p}\\)\n\n\n\n\\(s_p\\)\n\n\npooled standard deviation\n\n\n\n\n0.2\n\n\nSmall effect\n\n\n\n\n0.5\n\n\nMedium effect\n\n\n\n\n0.8\n\n\nLarge effect",
+    "crumbs": [
+      "Projects",
+      "Statistical Tests with R - Complete Guide"
+    ]
+  },
+  {
+    "objectID": "qmd/test_stat.html#non-parametric-tests",
+    "href": "qmd/test_stat.html#non-parametric-tests",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "Non-Parametric Tests",
+    "text": "Non-Parametric Tests\nMann-Whitney U Test (Wilcoxon Rank-Sum)\nNon-parametric alternative to two-sample t-test:\nTest statistic: \\[U = \\min(U_1, U_2)\\] where: \\[U_1 = n_1n_2 + \\frac{n_1(n_1+1)}{2} - R_1\\] \\[U_2 = n_1n_2 + \\frac{n_2(n_2+1)}{2} - R_2\\]\n\n\\(R_1, R_2\\) = sum of ranks for groups 1 and 2\nTests whether distributions differ in location",
+    "crumbs": [
+      "Projects",
+      "Statistical Tests with R - Complete Guide"
+    ]
+  },
+  {
+    "objectID": "qmd/test_stat.html#chi-square-tests",
+    "href": "qmd/test_stat.html#chi-square-tests",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "Chi-Square Tests",
+    "text": "Chi-Square Tests\nChi-Square Goodness of Fit Test\nTests whether observed frequencies match expected distribution:\nTest statistic: \\[\\chi^2 = \\sum \\frac{(O_i - E_i)^2}{E_i}\\]\nwhere:\n\n\n\n\\(O_i\\)\n\n\nobserved frequency in category i\n\n\n\n\n\\(E_i\\)\n\n\nexpected frequency in category i\n\n\n\n\n\\(df\\)\n\n\n\\(k - 1\\)\n\n\n\n\n\\(k\\)\n\n\n# where k = number of categories",
+    "crumbs": [
+      "Projects",
+      "Statistical Tests with R - Complete Guide"
+    ]
+  },
+  {
+    "objectID": "qmd/test_stat.html#fishers-exact-test",
+    "href": "qmd/test_stat.html#fishers-exact-test",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "Fisher’s Exact Test",
+    "text": "Fisher’s Exact Test\nMathematical Basis\nExact test for 2×2 contingency tables:\nProbability of observed configuration: \\[p = \\frac{\\binom{a+b}{a} \\binom{c+d}{c} \\binom{a+c}{a} \\binom{b+d}{b}}{\\binom{n}{a+b}}\\]\nwhere the table is:\n         | Col1 | Col2 | Total\nRow1     |  a   |  b   | a+b\nRow2     |  c   |  d   | c+d\nTotal    | a+c  | b+d  | n\nUse when: Expected frequencies &lt; 5 or small sample sizes",
+    "crumbs": [
+      "Projects",
+      "Statistical Tests with R - Complete Guide"
+    ]
+  },
+  {
+    "objectID": "qmd/test_stat.html#anova-analysis-of-variance",
+    "href": "qmd/test_stat.html#anova-analysis-of-variance",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "ANOVA (Analysis of Variance)",
+    "text": "ANOVA (Analysis of Variance)\nOne-Way ANOVA\nTests equality of means across 3+ groups:\nF-statistic: \\(F = \\frac{MS_{B}}{MS_{W}}\\)\nwhere:\n\n\n\nMSB\n\n\n\\(MS_B = \\frac{SS_B}{df_B}\\)\n\n\n\\(df_{B} = k - 1\\)\n\n\n\n\nMSW\n\n\n\\(MS_W = \\frac{SS_W}{df_W}\\)\n\n\n\\(df_{W} = N - k\\)\n\n\n\n\nSSB\n\n\n\\(SS_B = \\sum n_i(\\bar{x}_i - \\bar{x})^2\\)\n\n\n\n\n\n\nSSW\n\n\n\\(SS_W = \\sum \\sum (x_{ij} - \\bar{x}_i)^2\\)\n\n\n\n\n\n\nB = Between\nW = Within",
+    "crumbs": [
+      "Projects",
+      "Statistical Tests with R - Complete Guide"
+    ]
+  },
+  {
+    "objectID": "qmd/test_stat.html#assumption-checking",
+    "href": "qmd/test_stat.html#assumption-checking",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "Assumption Checking",
+    "text": "Assumption Checking\nNormality Tests",
+    "crumbs": [
+      "Projects",
+      "Statistical Tests with R - Complete Guide"
+    ]
+  },
+  {
+    "objectID": "qmd/test_stat.html#power-analysis",
+    "href": "qmd/test_stat.html#power-analysis",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "Power Analysis",
+    "text": "Power Analysis\nSample Size Calculation\nFor t-test: \\[n = \\left( \\frac{(z_{1-\\alpha/2} + z_{1-\\beta}) \\cdot \\sigma}{\\delta} \\right)^2\\]\nwhere:\n\n\n\n\\(\\alpha\\)\n\n\nsig. level\n\n\n\n\n\\(\\beta\\)\n\n\nType II error rate\n\n\n\n\n\\(1-\\beta\\)\n\n\npower\n\n\n\n\n\\(\\delta\\)\n\n\neffect size\n\n\n\n\n\\(\\sigma\\)\n\n\nstandard deviation",
+    "crumbs": [
+      "Projects",
+      "Statistical Tests with R - Complete Guide"
+    ]
+  },
+  {
+    "objectID": "qmd/test_stat.html#summary-table-of-tests",
+    "href": "qmd/test_stat.html#summary-table-of-tests",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "Summary Table of Tests",
+    "text": "Summary Table of Tests\n\n\n\n\n\n\n\n\n\nTest\nPurpose\nR Function\nKey Assumptions\n\n\n\n\nOne-sample t-test\nCompare mean to value\nt.test(x, mu)\nNormality, independence\n\n\nTwo-sample t-test\nCompare two means\nt.test(x, y)\nNormality, equal variances*\n\n\nPaired t-test\nCompare paired means\nt.test(x, y, paired=TRUE)\nNormality of differences\n\n\nMann-Whitney\nNon-parametric two samples\nwilcox.test(x, y)\nIndependent samples\n\n\nWilcoxon signed-rank\nNon-parametric paired\nwilcox.test(x, y, paired=TRUE)\nPaired data\n\n\nChi-square\nCategorical association\nchisq.test(table)\nExpected frequencies ≥ 5\n\n\nFisher’s exact\nSmall contingency tables\nfisher.test(table)\nFixed margins\n\n\nANOVA\nCompare 3+ means\naov(y ~ group)\nNormality, equal variances\n\n\n\n*Welch’s t-test doesn’t assume equal variances",
+    "crumbs": [
+      "Projects",
+      "Statistical Tests with R - Complete Guide"
+    ]
+  },
+  {
+    "objectID": "qmd/test_stat.html#best-practices",
+    "href": "qmd/test_stat.html#best-practices",
+    "title": "Statistical Tests with R - Complete Guide",
+    "section": "Best Practices",
+    "text": "Best Practices\n\nAlways check assumptions before interpreting results\nUse non-parametric tests when assumptions are violated\nReport effect sizes along with p-values\nConsider multiple testing corrections when appropriate\nUse confidence intervals to understand precision\nVisualize your data before running tests",
+    "crumbs": [
+      "Projects",
+      "Statistical Tests with R - Complete Guide"
+    ]
+  }
+]
