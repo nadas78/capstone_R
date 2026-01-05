@@ -1,91 +1,253 @@
 ---
-title: "quarto-webr Demo RevealJS Document"
+title: "Analyse des élèves inscrits dans les établissements scolaires publics en 2021/2022"
+author: "Nada SAID"
+date: "2025-12-25"
 format: 
   revealjs:
     scrollable: true
-    footer: '<a href="https://nevermind78.github.io/capstone_R/" style="position: fixed; bottom: 10px; right: 10px; z-index: 1000;"><svg width="24" height="24" viewBox="0 0 24 24" fill="#0366d6"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></a>'
 webr:
-  packages: ['ggplot2', 'dplyr'] # Install R packages on document open
-# autoload-packages: false       # Disable automatic loading of packages
-# show-startup-message: false    # Disable displaying status of webR initialization
+  packages: ["dplyr","ggplot2","readr","tidyr","forcats","scales","patchwork"]
 filters:
-- webr
+  - webr
+css: styles.css
 ---
 
-## Welcome
+## Contexte et motivation
 
-Welcome to a demo RevealJS presentation that uses the [`quarto-webr`](https://github.com/coatless/quarto-webr) extension to generate interactive code cells with [Quarto](https://quarto.org) and [webR](https://docs.r-wasm.org/webr/latest/).
+L'analyse des effectifs scolaires est essentielle pour le suivi, la planification et l’évaluation du système éducatif tunisien.  
+Elle permet d’identifier les disparités régionales, par niveau et par sexe, influençant les politiques éducatives et l’allocation des ressources.
 
-:::{.callout-important}
-This template requires a [**pre-release** version of Quarto that is 1.4.502 or greater](https://quarto.org/docs/download/prerelease)  that contains an updated copy of `pandoc`. For more details, please see [Issue #14](https://github.com/coatless/quarto-webr/issues/14). 
-:::
+---
 
-Not the right template? Let's go back to the [documentation portal](../../)
+## Problématique
 
-## webR in RevealJS 
+- Comment sont répartis les élèves selon les niveaux scolaires et les régions ?  
+- Existe-t-il des déséquilibres entre garçons et filles ?  
+- Quels niveaux ou régions concentrent le plus ou le moins d’élèves ?
 
-This is a webR-enabled code cell in a Quarto RevealJS document.
+---
 
-```{webr-r}
-fit = lm(mpg ~ wt, data = mtcars)
+## Objectifs
 
-summary(fit)
-```
+1. Décrire la population scolaire par sexe, niveau et région  
+2. Identifier les disparités régionales et par niveau  
+3. Comparer les proportions de garçons et de filles par région  
+4. Déterminer les niveaux les plus et les moins peuplés  
+5. Produire des visualisations claires pour la prise de décision
 
-## Base R Graphing with webR
+---
 
-```{webr-r}
-plot(pressure)
-```
-
-## ggplot2 in webR
-
-```{webr-r}
-ggplot(mpg, aes(displ, hwy, colour = class)) + 
-  geom_point()
-```
-
-## Help Documentation
+## Dataset
 
 ```{webr-r}
-?mean
+# Importer les données
+listings <- read.csv(
+  "https://raw.githubusercontent.com/nadas78/eleves-data/refs/heads/main/eleves.csv",
+  sep = ";", stringsAsFactors = FALSE, encoding = "UTF-8"
+)
+names(listings) <- c("annee","code_cre","nom_cre","niveau","sexe","effectif")
+
+# Harmoniser les variables
+listings$niveau <- trimws(listings$niveau)
+listings$sexe <- trimws(listings$sexe)
+listings$sexe[listings$sexe %in% c("M","Masculin","Homme")] <- "Garçons"
+listings$sexe[listings$sexe %in% c("F","Féminin","Feminin","Femme")] <- "Filles"
+listings$annee <- as.factor(listings$annee)
+listings$code_cre <- as.factor(listings$code_cre)
+listings$niveau <- as.factor(listings$niveau)
+listings$sexe <- as.factor(listings$sexe)
+listings$effectif <- as.numeric(listings$effectif)
+
+cat("✅ Données importées et nettoyées\n")
 ```
 
+## Analyse exploratoire
 
-## Prints, Warnings, and Errors
-
+### Aperçu des données
 ```{webr-r}
-cat("Hello there!\n")
-
-x = c(1, 2, 3)
-print(x)
-
-warning("Uh-oh, something is amiss")
-
-stop("I'm sorry Dave, I'm afraid I can't do that")
+head(listings)
+cat("Nombre de lignes :", nrow(listings), "\n")
+cat("Nombre de colonnes:", ncol(listings), "\n")
+str(listings)
+summary(listings)
 ```
 
-
-## Keyboard Shortcuts
-
-- Run selected code using either:
-  - macOS: <kbd>⌘</kbd> + <kbd>↩/Return</kbd>
-  - Windows/Linux: <kbd>Ctrl</kbd> + <kbd>↩/Enter</kbd>
-- Run the entire code by clicking the "Run code" button or pressing <kbd>Shift</kbd>+<kbd>↩</kbd>. 
-
+## Répartition par sexe
 ```{webr-r}
-print("Hello quarto-webr RevealJS world!")
 
-3 + 7
+par_sexe <- listings %>%
+group_by(sexe) %>%
+summarise(total = sum(effectif))
+
+par_sexe <- aggregate(effectif ~ sexe, data=listings, sum)
+
+# Graphique avec ggplot2
+library(ggplot2)
+
+ggplot(par_sexe, aes(x=effectif, y=reorder(sexe, effectif), fill=sexe)) +
+  geom_col(width=0.6) +
+  geom_text(aes(label=effectif), hjust=-0.1, size=5) +
+  scale_fill_manual(values=c("Garçons"="#1f77b4","Filles"="#F4A6C1")) +
+  labs(title="Répartition des élèves par sexe", x="Effectif", y="") +
+  theme_minimal(base_size=14) +
+  theme(legend.position="none",
+        plot.title=element_text(hjust=0.5, face="bold")) +
+  xlim(0, max(par_sexe$effectif)*1.2)
+
+
+```
+## Répartition par niveau scolaire
+```{webr-r}
+niveau_order <- c(
+
+# Primaire
+
+"1ère année primaire","2ème année primaire","3ème année primaire",
+"4ème année primaire","5ème année primaire","6ème année primaire",
+
+# Collège
+
+"7ème année de base","8ème année de base","9ème année de base",
+
+# Lycée 1ère année
+
+"1ère année secondaire Tronc commun",
+
+# Lycée 2ème année
+
+"2ème année secondaire Lettres","2ème année secondaire Economie et services",
+"2ème année secondaire Sport","2ème année secondaire Sciences",
+
+# Lycée 3ème année
+
+"3ème année secondaire Mathématiques","3ème année secondaire Sc. Expérimentales",
+"3ème année secondaire Sc.Techniques","3ème année secondaire Sc.Informatique",
+"3ème année secondaire Economie et Gestion","3ème année secondaire Lettres",
+"3ème année secondaire Sport",
+
+# Lycée 4ème année
+
+"4ème année secondaire Mathématiques","4ème année secondaire Sc. Expérimentales",
+"4ème année secondaire Sc.Techniques","4ème année secondaire Sc.Informatique",
+"4ème année secondaire Economie et Gestion","4ème année secondaire Lettres",
+"4ème année secondaire Sport"
+)
+
+library(dplyr)
+library(ggplot2)
+
+par_niveau <- listings %>%
+  filter(niveau %in% niveau_order) %>%   # garde uniquement les niveaux existants
+  group_by(niveau) %>%
+  summarise(total = sum(effectif, na.rm = TRUE), .groups = "drop") %>%
+  mutate(
+    niveau = factor(niveau, levels = niveau_order)
+  ) %>%
+  filter(total > 0)                       # sécurité supplémentaire
+
+# Graphique
+ggplot(par_niveau, aes(x = total, y = niveau, fill = total)) +
+  geom_col() +
+  geom_text(aes(label = ifelse(total > 0, total, "")), 
+            hjust = -0.1, size = 4) +  # n'affiche rien si total = 0
+  scale_fill_gradient(low = "#a6cee3", high = "#1f78b4") +
+  labs(title = "Effectif total par niveau scolaire", x = "Effectif", y = "") +
+  theme_minimal(base_size = 14) +
+  xlim(0, max(par_niveau$total) * 1.2)
+
+
+```
+## Répartition par région
+```{webr-r}
+
+
+# Charger les packages
+library(dplyr)
+library(ggplot2)
+
+# Calcul de l'effectif total par région
+par_region <- aggregate(effectif ~ nom_cre, data = listings, sum)
+
+# Graphique en barres horizontales
+ggplot(par_region, aes(x = effectif, y = reorder(nom_cre, effectif), fill = effectif)) +
+  geom_col() +
+  geom_text(aes(label = effectif), hjust = -0.1, size = 4) +
+  scale_fill_gradient(low = "#a6cee3", high = "#1f78b4") +
+  labs(
+    title = "Effectif total d'élèves par région (CRE)",
+    x = "Effectif",
+    y = ""
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "none",
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  ) +
+  xlim(0, max(par_region$effectif) * 1.2)
 ```
 
+## Comparaison garçons/filles par région
+```{webr-r}
+sexe_region <- listings %>%
+group_by(nom_cre,sexe) %>%
+summarise(effectif=sum(effectif), .groups='drop')
+
+ggplot(sexe_region, aes(x=effectif, y=reorder(nom_cre,effectif), fill=sexe)) +
+geom_col(position=position_dodge(width=0.8)) +
+geom_text(aes(label=effectif), position=position_dodge(width=0.8), hjust=-0.1, size=3) +
+scale_fill_manual(values=c("Garçons"="#1f78b4","Filles"="#F4A6C1")) +
+labs(title="Répartition garçons/filles par région (CRE)", x="Effectif", y="", fill="Sexe") +
+theme_minimal(base_size=12) +
+theme(plot.title=element_text(hjust=0.5, face="bold")) +
+scale_x_continuous(expand=expansion(mult=c(0,0.2)))
+
+```
+
+## Top/Bottom filles (%) par région
+```{webr-r}
+filles_region <- sexe_region_pct %>%
+  filter(sexe == "Filles")
+  top5_plus <- filles_region %>%
+  arrange(desc(Pourcentage)) %>%
+  slice_head(n = 5) %>%
+  mutate(Groupe = "Plus de filles")
+
+top5_moins <- filles_region %>%
+  arrange(Pourcentage) %>%
+  slice_head(n = 5) %>%
+  mutate(Groupe = "Moins de filles")
+
+top5_compare <- bind_rows(top5_plus, top5_moins)
+ggplot(top5_compare,
+       aes(x = Pourcentage,
+           y = reorder(nom_cre, Pourcentage),
+           fill = Groupe)) +
+  geom_col(width = 0.7) +
+  geom_text(
+    aes(label = paste0(Pourcentage, " %")),
+    hjust = -0.1,
+    size = 4
+  ) +
+  scale_fill_manual(
+    values = c(
+      "Plus de filles" = "#1f78b4",
+      "Moins de filles" = "#e31a1c"
+    )
+  ) +
+  labs(
+    title = "Comparaison des régions selon la proportion de filles",
+    x = "Pourcentage de filles",
+    y = "",
+    fill = "Groupe"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold")) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.25)))
 
 
-:::{.callout-note}
-Avoid using _within_ a RevealJS presentation. Only 1 instance of webR should be running.
-:::
 
-## Fin
+```
+## Conclusion et perspectives
 
-Thanks for checking out the demo! Let's head back to
-the [documentation portal](../../).
+Ce projet met en lumière des déséquilibres éducatifs prononcés au sein du système tunisien, caractérisés par une concentration des effectifs dans les régions côtières du Nord et de l'Est, et un déficit marqué dans les régions du Sud et de l'intérieur. On observe également une décroissance préoccupante des effectifs à mesure que le niveau scolaire s'élève, signalant des défis de rétention et d'orientation. Si la parité filles-garçons est globalement respectée, les choix de spécialisation révèlent un déséquilibre au profit des filières perçues comme plus porteuses, telles que l'Économie-Gestion, au détriment d'autres domaines. Pour y répondre, une politique éducative territorialisée, un renforcement de l'orientation professionnelle et des investissements ciblés dans les infrastructures des zones défavorisées s'avèrent essentiels pour bâtir un système plus équitable et adapté aux besoins de tous les élèves.
+Perspectives : étendre l’analyse à plusieurs années, inclure le privé et d’autres indicateurs.

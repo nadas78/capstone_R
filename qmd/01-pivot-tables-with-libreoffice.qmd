@@ -7,10 +7,10 @@ format:
     theme: cosmo
     toc: true
     number-sections: true
-
+    css: styles.css
 
 webr:
-  packages: [ "dplyr","ggplot2","readr","tidyr","forcats"]
+  packages: [ "dplyr","ggplot2","readr","tidyr","forcats", "scales"]
   plot-width: 800
   plot-height: 600
 
@@ -19,97 +19,141 @@ filters:
 ---
 
 
-## Introduction
+##  Introduction
 
-Analyser la répartition des effectifs des élèves dans l’enseignement public selon l’année scolaire, la région, le niveau et le sexe, et produire des indicateurs utiles pour le suivi du système éducatif.
+L'analyse des effectifs scolaires constitue un outil essentiel pour le suivi, la planification et l'évaluation des systèmes éducatifs. En Tunisie, la répartition des élèves de l'enseignement public selon les régions, les niveaux scolaires et le sexe permet d'identifier des disparités territoriales et démographiques susceptibles d'influencer les politiques éducatives.
 
-**Charger les données:** 
+Ce projet vise à analyser la répartition des effectifs des élèves de l'enseignement public en Tunisie durant l'année scolaire 2021–2022 à l'aide d'outils d'analyse descriptive et statistique sous R. L'objectif est de produire des indicateurs synthétiques utiles au suivi et à l'évaluation du système éducatif.
 
----
+**Objectifs spécifiques :**
 
-### 1 Effectif par région (CRE)
+1. Analyser la répartition des élèves par sexe
+2. Examiner la distribution par niveau scolaire
+3. Étudier les disparités régionales
+4. Croiser les dimensions sexe et région
+5. Produire des visualisations claires et informatives
+
+##  Description des données
+
+### Source et importation des données
+
+Les données utilisées proviennent d'un fichier CSV contenant les effectifs des élèves inscrits dans les établissements scolaires publics tunisiens pour l'année scolaire 2021–2022. Les variables décrivent l'année scolaire, la région (CRE), le niveau scolaire, le sexe et l'effectif correspondant.
+
+###  Importation du fichier CSV
+
+Dans cette étape, le fichier de données au format CSV est importé à l'aide de la fonction `read.csv()`, qui permet de lire des données tabulaires dans R. Le séparateur utilisé est le point-virgule, et les chaînes de caractères sont conservées telles quelles sans conversion automatique en facteurs.
 
 ```{webr-r}
 listings <- read.csv(
   "https://raw.githubusercontent.com/nadas78/eleves-data/refs/heads/main/eleves.csv",
   sep = ";",
-  stringsAsFactors = FALSE
+  stringsAsFactors = FALSE,
+  encoding = "UTF-8"
 )
 
-head(listings)
-
-
-
+cat("✅ Données importées avec succès\n")
 ```
 
----
+### Aperçu du jeu de données:
 
-### 2.  visualisation de dataset:
+Cette étape permet de vérifier la structure, la dimension et la qualité globale des données avant toute analyse.
+
+1. Aperçu général
+
+Le dataset listings contient 1664 observations et 6 variables sur les élèves inscrits dans les établissements scolaires publics pour l’année scolaire 2021/2022. Il inclut : l’année scolaire (annee_scolaire), le code et le nom de la circonscription régionale (Ordre_CRE, Nom_CRE), le niveau scolaire (Niveau_scolaire), le sexe (Sexe) et l’effectif des élèves (Effectif_eleves). Les effectifs varient de 0 à 9133 élèves, avec une moyenne d’environ 1326 par ligne. Ce dataset permet d’analyser la répartition des élèves par niveau, sexe et CRE, et d’étudier l’effectif scolaire et l’équité territoriale.
 
 ```{webr-r}
-cat("Nombre de lignes :", nrow(listings), "\n")
 head(listings)
+cat("Nombre de lignes :", nrow(listings), "\n")
+cat("Nombre de colonnes:", ncol(listings), "\n")
 str(listings)
 summary(listings)
 ```
+2. Vérifier les valeurs manquantes:
 
----
-
-### 3. Nettoyage et renommage des colonnes
-
+L’exploration des données montre qu’il n’existe aucune valeur manquante ni chaîne vide, ce qui signifie que le dataset est complet et propre.
 ```{webr-r}
-listings <- listings %>%
-rename(
-annee = annee_scolaire,
-code_cre = Ordre_CRE,
-nom_cre = Nom_CRE,
-niveau = Niveau_scolaire,
-sexe = Sexe,
-effectif = Effectif_eleves
-) %>%
-mutate(
-nom_cre = trimws(nom_cre),
-niveau = trimws(niveau),
-sexe = trimws(sexe),
-sexe = case_when(
-sexe %in% c("M","Masculin","Homme") ~ "Masculin",
-sexe %in% c("F","Féminin","Femme") ~ "Féminin",
-TRUE ~ sexe
-),
-annee = as.factor(annee),
-code_cre = as.factor(code_cre),
-niveau = as.factor(niveau),
-sexe = as.factor(sexe),
-effectif = as.numeric(effectif)
-) %>%
-filter(!is.na(effectif))
+sapply(listings, function(col) sum(is.na(col)))  
+sapply(listings, function(col) sum(col == "" & !is.na(col)))
+```
 
+3. Vérifier les doublons:
+
+L’analyse du dataset listings montre qu’il ne contient aucune ligne dupliquée
+```{webr-r}
+sum(duplicated(listings))        
+listings[duplicated(listings), ] 
 ```
 
 ---
 
-### 4. Répartition par sexe
+## Analyse exploratoire
+###  Nettoyage et préparation des données
+
+Cette étape vise à améliorer la lisibilité des variables, à harmoniser les valeurs textuelles, à standardiser la variable sexe et à convertir les colonnes dans des formats adaptés à l’analyse statistique.
 
 ```{webr-r}
+# Renommer les colonnes
+names(listings) <- c("annee","code_cre","nom_cre","niveau","sexe","effectif")
+
+# Nettoyer les espaces
+listings$nom_cre <- trimws(listings$nom_cre)
+listings$niveau <- trimws(listings$niveau)
+listings$sexe <- trimws(listings$sexe)
+
+# Harmoniser le sexe
+listings$sexe[listings$sexe %in% c("M","Masculin","Homme")] <- "Garçons"
+listings$sexe[listings$sexe %in% c("F","Féminin","Feminin","Femme")] <- "Filles"
+
+# Convertir les types
+listings$annee <- as.factor(listings$annee)
+listings$code_cre <- as.factor(listings$code_cre)
+listings$niveau <- as.factor(listings$niveau)
+listings$sexe <- as.factor(listings$sexe)
+listings$effectif <- as.numeric(listings$effectif)
+cat("✅ Données avec succès\n")
+
+```
+
+
+## Résultats
+
+###  Répartition par sexe
+
+Cette section fournit des indicateurs synthétiques permettant d’avoir une vision d’ensemble de la population scolaire. Elle calcule le nombre total d’élèves par sexe. 
+
+Le graphique montre que le nombre de filles (1 125 129) est légèrement supérieur à celui des garçons (1 080 842) dans l’enseignement public pour l’année scolaire 2021–2022. Cette répartition indique que la population scolaire est globalement équilibrée entre les sexes, avec une légère majorité de filles.
+
+```{webr-r}
+
 par_sexe <- listings %>%
 group_by(sexe) %>%
 summarise(total = sum(effectif))
 
-ggplot(par_sexe, aes(x=total, y=reorder(sexe,total), fill=sexe)) +
-geom_col(width=0.6) +
-geom_text(aes(label=total), hjust=-0.1, size=5) +
-scale_fill_manual(values=c("Masculin"="#1f77b4","Féminin"="#000000")) +
-labs(title="Répartition des élèves par sexe", x="Effectif", y="") +
-theme_minimal(base_size=14) +
-theme(legend.position="none",
-plot.title=element_text(hjust=0.5, face="bold")) +
-xlim(0, max(par_sexe$total)*1.2)
+par_sexe <- aggregate(effectif ~ sexe, data=listings, sum)
+
+# Graphique avec ggplot2
+library(ggplot2)
+
+ggplot(par_sexe, aes(x=effectif, y=reorder(sexe, effectif), fill=sexe)) +
+  geom_col(width=0.6) +
+  geom_text(aes(label=effectif), hjust=-0.1, size=5) +
+  scale_fill_manual(values=c("Garçons"="#1f77b4","Filles"="#F4A6C1")) +
+  labs(title="Répartition des élèves par sexe", x="Effectif", y="") +
+  theme_minimal(base_size=14) +
+  theme(legend.position="none",
+        plot.title=element_text(hjust=0.5, face="bold")) +
+  xlim(0, max(par_sexe$effectif)*1.2)
+
 
 ```
 
 ---
 
-### 5. Répartition par niveau scolaire
+### Répartition par niveau scolaire
+Le graphique montre un effectif très élevé dans les classes de primaire, mais une diminution progressive au fur et à mesure que les niveaux scolaires avancent. Cette baisse pourrait refléter des difficultés d'étude au secondaire et au collège, pouvant être liées à l'abandon scolaire ou à la sélection entre les cycles.
+
+On observe également une différence marquée entre les orientations au secondaire. Des spécialités comme le Sport attirent relativement peu d'élèves, tandis que l’orientation Économie et Gestion arrive en première position, suivie des Sciences, puis des Sciences Techniques.
 
 ```{webr-r}
 niveau_order <- c(
@@ -147,48 +191,70 @@ niveau_order <- c(
 "4ème année secondaire Sport"
 )
 
-par_niveau <- listings %>%
-mutate(niveau=factor(niveau, levels=niveau_order)) %>%
-group_by(niveau) %>%
-summarise(total=sum(effectif, na.rm=TRUE)) %>%
-ungroup() %>%
-complete(niveau=factor(niveau_order, levels=niveau_order), fill=list(total=0))
+library(dplyr)
+library(ggplot2)
 
-ggplot(par_niveau, aes(x=total, y=niveau, fill=total)) +
-geom_col() +
-geom_text(aes(label=total), hjust=-0.1, size=4) +
-scale_fill_gradient(low="#a6cee3", high="#1f78b4") +
-labs(title="Effectif total par niveau scolaire", x="Effectif", y="") +
-theme_minimal(base_size=14) +
-theme(legend.position="none", plot.title=element_text(hjust=0.5, face="bold")) +
-xlim(0, max(par_niveau$total)*1.2)
+par_niveau <- listings %>%
+  filter(niveau %in% niveau_order) %>%   # garde uniquement les niveaux existants
+  group_by(niveau) %>%
+  summarise(total = sum(effectif, na.rm = TRUE), .groups = "drop") %>%
+  mutate(
+    niveau = factor(niveau, levels = niveau_order)
+  ) %>%
+  filter(total > 0)                       # sécurité supplémentaire
+
+# Graphique
+ggplot(par_niveau, aes(x = total, y = niveau, fill = total)) +
+  geom_col() +
+  geom_text(aes(label = ifelse(total > 0, total, "")), 
+            hjust = -0.1, size = 4) +  # n'affiche rien si total = 0
+  scale_fill_gradient(low = "#a6cee3", high = "#1f78b4") +
+  labs(title = "Effectif total par niveau scolaire", x = "Effectif", y = "") +
+  theme_minimal(base_size = 14) +
+  xlim(0, max(par_niveau$total) * 1.2)
+
 
 ```
 
----
 
-### 6.Répartition par région
+### Répartition régionale des effectifs scolaires
+
+Ce graphique montre que la région de Nabeul a le plus grand effectif, suivie par Sousse et Ben Arous. Les dernières places sont occupées par Kebili, Tataouine et Tozeur. Cela pourrait indiquer une disparité régionale, où les régions du Nord ont une participation plus élevée, tandis que celles du Sud et du Sud-Est sont moins représentées, peut-être en raison de facteurs socio-économiques, géographiques ou de différences dialectales.
 
 ```{webr-r}
-par_region <- listings %>%
-group_by(nom_cre) %>%
-summarise(total=sum(effectif, na.rm=TRUE)) %>%
-arrange(total)
 
-ggplot(par_region, aes(x=total, y=reorder(nom_cre,total), fill=total)) +
-geom_col() +
-geom_text(aes(label=total), hjust=-0.1, size=4) +
-scale_fill_gradient(low="#a6cee3", high="#1f78b4") +
-labs(title="Effectif total d'élèves par région (CRE)", x="Effectif", y="") +
-theme_minimal(base_size=14) +
-theme(legend.position="none", plot.title=element_text(hjust=0.5, face="bold")) +
-xlim(0,max(par_region$total)*1.2)
+
+# Charger les packages
+library(dplyr)
+library(ggplot2)
+
+# Calcul de l'effectif total par région
+par_region <- aggregate(effectif ~ nom_cre, data = listings, sum)
+
+# Graphique en barres horizontales
+ggplot(par_region, aes(x = effectif, y = reorder(nom_cre, effectif), fill = effectif)) +
+  geom_col() +
+  geom_text(aes(label = effectif), hjust = -0.1, size = 4) +
+  scale_fill_gradient(low = "#a6cee3", high = "#1f78b4") +
+  labs(
+    title = "Effectif total d'élèves par région (CRE)",
+    x = "Effectif",
+    y = ""
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "none",
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  ) +
+  xlim(0, max(par_region$effectif) * 1.2)
+
 
 ```
 
 ---
 
-### 7. Répartition par sexe et région
+### Répartition des élèves par sexe et par région
+Ce graphique met en lumière une forte inégalité géographique dans la répartition des effectifs scolaires en Tunisie, avec un clivage net entre les régions côtières développées et les régions intérieures et méridionales. Bien que la parité filles-garçons soit globalement atteinte, les disparités régionales soulignent la nécessité de politiques éducatives ciblées pour renforcer l’accès et la rétention scolaire dans les zones défavorisées.
 
 ```{webr-r}
 sexe_region <- listings %>%
@@ -198,7 +264,7 @@ summarise(effectif=sum(effectif), .groups='drop')
 ggplot(sexe_region, aes(x=effectif, y=reorder(nom_cre,effectif), fill=sexe)) +
 geom_col(position=position_dodge(width=0.8)) +
 geom_text(aes(label=effectif), position=position_dodge(width=0.8), hjust=-0.1, size=3) +
-scale_fill_manual(values=c("Masculin"="#1f78b4","Féminin"="#000000")) +
+scale_fill_manual(values=c("Garçons"="#1f78b4","Filles"="#F4A6C1")) +
 labs(title="Répartition garçons/filles par région (CRE)", x="Effectif", y="", fill="Sexe") +
 theme_minimal(base_size=12) +
 theme(plot.title=element_text(hjust=0.5, face="bold")) +
@@ -207,35 +273,260 @@ scale_x_continuous(expand=expansion(mult=c(0,0.2)))
 ```
 
 ---
+## Analyse synthétique
 
-### 8. Min-Max Plot with ggplot2
+### Indicateurs complémentaires
 
+1 Calcul des indicateurs régionaux
 ```{webr-r}
-elbe |> 
-  mutate(doy = yday(as.Date(Date))) |>
-  group_by(doy) |>
-  summarize(max = max(discharge),
-            mean = mean(discharge),
-            min = min(discharge)) |>
-  pivot_longer(cols = c("min", "mean", "max"),
-               names_to = "statistic",
-               values_to = "discharge") |>
-  ggplot(aes(doy, discharge, color = statistic)) +
-  geom_line()
+total_region <- sexe_region %>%
+  group_by(nom_cre) %>%
+  summarise(Total = sum(effectif), .groups = "drop")
+
+sexe_region_pct <- sexe_region %>%
+  left_join(total_region, by = "nom_cre") %>%
+  mutate(Pourcentage = round(effectif / Total * 100, 1))
+
 ```
 
----
-
-### 9. Pivot table (wide ↔ long)
-
+2 Le TOP 5 des régions avec le PLUS de filles (%) et le TOP 5 avec le MOINS de filles (%)
 ```{webr-r}
-elbe_wide <- pivot_wider(elbe,
-                         id_cols = doy,
-                         names_from = year,
-                         values_from = discharge)
+filles_region <- sexe_region_pct %>%
+  filter(sexe == "Filles")
+  top5_plus <- filles_region %>%
+  arrange(desc(Pourcentage)) %>%
+  slice_head(n = 5) %>%
+  mutate(Groupe = "Plus de filles")
 
-pivot_longer(elbe_wide, names_to="year", cols=as.character(1989:2019))
+top5_moins <- filles_region %>%
+  arrange(Pourcentage) %>%
+  slice_head(n = 5) %>%
+  mutate(Groupe = "Moins de filles")
+
+top5_compare <- bind_rows(top5_plus, top5_moins)
+ggplot(top5_compare,
+       aes(x = Pourcentage,
+           y = reorder(nom_cre, Pourcentage),
+           fill = Groupe)) +
+  geom_col(width = 0.7) +
+  geom_text(
+    aes(label = paste0(Pourcentage, " %")),
+    hjust = -0.1,
+    size = 4
+  ) +
+  scale_fill_manual(
+    values = c(
+      "Plus de filles" = "#1f78b4",
+      "Moins de filles" = "#e31a1c"
+    )
+  ) +
+  labs(
+    title = "Comparaison des régions selon la proportion de filles",
+    x = "Pourcentage de filles",
+    y = "",
+    fill = "Groupe"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold")) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.25)))
+
+
+
 ```
 
----
 
+3 le Top 5 régions avec le moinset  (%) et le plus (%) de garçons
+```{webr-r}library(dplyr)
+library(ggplot2)
+
+# 1. Total par région
+total_region <- sexe_region %>%
+  group_by(nom_cre) %>%
+  summarise(Total = sum(effectif), .groups = "drop")
+
+# 2. Pourcentage par sexe et région
+sexe_region_pct <- sexe_region %>%
+  left_join(total_region, by = "nom_cre") %>%
+  mutate(Pourcentage = round(effectif / Total * 100, 1))
+
+# 3. Filtrer les garçons
+garcons_region <- sexe_region_pct %>%
+  filter(sexe == "Garçons")
+
+# 4. Top 5 régions avec PLUS de garçons
+top5_plus <- garcons_region %>%
+  arrange(desc(Pourcentage)) %>%
+  slice_head(n = 5) %>%
+  mutate(Groupe = "Plus de garçons")
+
+# 5. Top 5 régions avec MOINS de garçons
+top5_moins <- garcons_region %>%
+  arrange(Pourcentage) %>%
+  slice_head(n = 5) %>%
+  mutate(Groupe = "Moins de garçons")
+
+# 6. Combinaison
+top5_compare <- bind_rows(top5_plus, top5_moins)
+
+# 7. Graphique
+ggplot(top5_compare,
+       aes(x = Pourcentage,
+           y = reorder(nom_cre, Pourcentage),
+           fill = Groupe)) +
+  geom_col(width = 0.7) +
+  geom_text(
+    aes(label = paste0(Pourcentage, " %")),
+    hjust = -0.1,
+    size = 4
+  ) +
+  scale_fill_manual(
+    values = c(
+      "Plus de garçons" = "#1f78b4",   # bleu
+      "Moins de garçons" = "#E91E63"   # rose
+    )
+  ) +
+  labs(
+    title = "Comparaison des régions selon la proportion de garçons",
+    x = "Pourcentage de garçons",
+    y = "",
+    fill = "Groupe"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold")) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.25)))
+
+```
+
+4. Le Top 5 niveaux les PLUS peuplés
+```{webr-r}
+top5_niveaux <- niveau_stats %>%
+  arrange(desc(total)) %>%
+  slice_head(n = 5)
+
+ggplot(top5_niveaux,
+       aes(x = total, y = reorder(niveau, total))) +
+  geom_col(fill = "#33a02c") +
+  geom_text(aes(label = format(total, big.mark = " ")),
+            hjust = -0.1, size = 4) +
+  labs(
+    title = "Top 5 des niveaux scolaires les plus peuplés",
+    x = "Effectif total",
+    y = ""
+  ) +
+  theme_minimal(base_size = 13) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.2)))
+
+```
+
+6 Le Top 5 niveaux les MOINS peuplés
+```{webr-r}
+library(dplyr)
+library(ggplot2)
+
+# Préparer les données par niveau et calculer total
+par_niveau <- listings %>%
+  filter(niveau %in% niveau_order) %>%
+  group_by(niveau) %>%
+  summarise(total = sum(effectif, na.rm = TRUE), .groups = "drop")
+
+# Sélection Top 3 et Bottom 3
+top3 <- par_niveau %>% arrange(desc(total)) %>% slice_head(n = 3)
+bottom3 <- par_niveau %>% arrange(total) %>% slice_head(n = 3)
+
+# Combiner Top et Bottom
+top_bottom <- bind_rows(top3 %>% mutate(category = "Top 3"),
+                        bottom3 %>% mutate(category = "Bottom 3"))
+
+# Graphique
+ggplot(top_bottom, aes(x = total, y = reorder(niveau, total), fill = category)) +
+  geom_col() +
+  geom_text(aes(label = total), hjust = -0.1, size = 4) +
+  scale_fill_manual(values = c("Top 3" = "#1f78b4", 
+                               "Bottom 3" = "#ff7f00")) +
+  labs(title = "Top 3 et Bottom 3 niveaux scolaires",
+       x = "Effectif total", y = "") +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "bottom") +
+  xlim(0, max(top_bottom$total) * 1.2)
+
+
+
+```
+
+7 Le Top 3 et Bottom 3 niveaux scolaires par région le plus moins eleves.
+```{webr-r}
+library(patchwork)
+
+# Fonction pour créer un graphique par région avec annotations
+create_region_plot <- function(region_name) {
+  data_region <- top_bottom_region %>% 
+    filter(nom_cre == region_name) %>%
+    mutate(
+      # Ajouter une colonne pour l'annotation
+      annotation = ifelse(category == "Top 3", "+", "-"),
+      # Ajouter une position pour l'annotation
+      annotation_x = ifelse(category == "Top 3", total * 1.02, total * 0.98)
+    )
+  
+  p <- ggplot(data_region, 
+         aes(x = total, y = reorder(niveau, total), fill = category)) +
+    geom_col(position = "dodge") +
+    # Texte avec les effectifs
+    geom_text(aes(label = format(total, big.mark = " ")), 
+              size = 2.5, position = position_dodge(width = 0.9),
+              hjust = -0.1, vjust = 0.3) +
+    # Annotation + ou -
+    geom_text(aes(x = annotation_x, label = annotation, color = category),
+              size = 3.5, fontface = "bold",
+              position = position_dodge(width = 0.9),
+              show.legend = FALSE) +
+    scale_fill_manual(values = c("Top 3" = "#1f78b4", "Bottom 3" = "#ff7f00")) +
+    scale_color_manual(values = c("Top 3" = "#1f78b4", "Bottom 3" = "#ff7f00")) +
+    labs(title = region_name,
+         x = "", y = "") +
+    theme_minimal(base_size = 8) +
+    theme(legend.position = "none",
+          plot.title = element_text(size = 9, hjust = 0.5, face = "bold"),
+          plot.margin = margin(5, 20, 5, 5)) +
+    expand_limits(x = max(data_region$total) * 1.15)
+  
+  return(p)
+}
+
+# Créer une liste de graphiques par région
+regions <- unique(top_bottom_region$nom_cre)
+plots <- lapply(regions[1:min(6, length(regions))], create_region_plot)
+
+# Combiner avec patchwork
+combined_plot <- wrap_plots(plots, ncol = 2) + 
+  plot_annotation(
+    title = "Top 3 et Bottom 3 niveaux scolaires par région",
+    
+  ) +
+  plot_layout(guides = "collect")
+
+print(combined_plot)
+```
+
+##   Discussion
+
+Cette analyse met en évidence les déséquilibres structurels et territoriaux qui caractérisent le système éducatif tunisien. La concentration des effectifs dans les régions côtières du Nord et de l'Est, au détriment des régions de l’intérieur et du Sud, révèle une migration interne importante, souvent motivée par les inégalités économiques et l’accès aux opportunités. Ces flux accentuent les disparités en termes d’infrastructures scolaires, de ressources enseignantes et de conditions d’apprentissage, creusant ainsi un écart éducatif entre les territoires.
+
+Sur le plan de l’orientation scolaire, on observe une forte polarisation vers les filières perçues comme porteuses (Économie et Gestion, Sciences), tandis que d’autres spécialités (Sport, Lettre) restent marginalisées. Ce déséquilibre reflète une adéquation partielle entre la formation offerte et les besoins réels du marché du travail, risquant à terme de générer des pénuries de compétences dans certains secteurs et une saturation dans d’autres.
+
+Enfin, si la parité filles-garçons est globalement atteinte, elle masque des réalités locales différenciées, où les filles sont parfois majoritaires dans les régions les moins favorisées, possiblement en raison de stratégies familiales ou de migrations différenciées des garçons.
+
+En somme, pour une éducation plus équitable et efficace, il est indispensable :
+
+D’adopter une approche territorialisée des politiques éducatives, ciblant les régions défavorisées par des investissements adaptés et des incitations pour le personnel enseignant.
+
+De renforcer l’orientation scolaire en l’articulant mieux avec les perspectives économiques régionales et nationales, tout en valorisant la diversité des talents.
+
+D’intégrer la dimension migratoire dans la planification éducative, afin d’anticiper les variations démographiques et de garantir un accès durable à une éducation de qualité pour tous, quel que soit le lieu de résidence.
+
+Une telle approche holistique contribuerait à réduire les fractures éducatives, à optimiser les ressources et à préparer les jeunes aux défis socio-économiques futurs.
+
+
+## Conclusion
+
+Ce projet met en lumière des déséquilibres éducatifs prononcés au sein du système tunisien, caractérisés par une concentration des effectifs dans les régions côtières du Nord et de l'Est, et un déficit marqué dans les régions du Sud et de l'intérieur. On observe également une décroissance préoccupante des effectifs à mesure que le niveau scolaire s'élève, signalant des défis de rétention et d'orientation. Si la parité filles-garçons est globalement respectée, les choix de spécialisation révèlent un déséquilibre au profit des filières perçues comme plus porteuses, telles que l'Économie-Gestion, au détriment d'autres domaines. Pour y répondre, une politique éducative territorialisée, un renforcement de l'orientation professionnelle et des investissements ciblés dans les infrastructures des zones défavorisées s'avèrent essentiels pour bâtir un système plus équitable et adapté aux besoins de tous les élèves.

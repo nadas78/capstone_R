@@ -1,21 +1,46 @@
 ---
-title: "Template Project For Elements of Applied Statistics "
-subtitle: "Template and Ideas"
+title: "Portfolio Personnel – Nada Said"
+subtitle: "Étudiante en Data Science & Intelligence Artificielle"
 ---
 
-## Introduction
+## À propos de moi
 
-This website contains a collection of template for capstone's Statistics with **R**. The aim is to provide insight in fundamental principles and 
-a broad overview and to enable students to select and understand specific books and online material to dig in deeper in the diverse and fascinating field of statistics.
+Je suis étudiante en cycle ingénieur en génie informatique, spécialisée en Data Science et Intelligence Artificielle. Passionnée par l'analyse de données, le machine learning et la résolution de problèmes complexes, je cherche un stage de fin d'études pour appliquer mes compétences dans un environnement concret et innovant.
 
+📍 Sousse, Tunisie  
+📧 nadaasaid9@gmail.com  
+📞 +216 52 073 876  
 
+* [**GitHub**](https://github.com/nadas78)
+* [**LinkedIn**](www.linkedin.com/in/said-nada)
 
-## Related Pages
+## Expériences professionnelles
 
-* [**Lecture slides**]()
-* [**Datasets**]()
-* [Source code \ github]()
+### Stagiaire en Développement Full Stack – Edidact
+**Juin - juillet 2024**
 
-## Author
+- Conception d'interface utilisateur (UX/UI) avec Figma.
+- Développement front-end avec React.js et JavaScript.
+- Back-end avec Node.js et Express.js.
+- Intégration d'API REST pour des mises à jour dynamiques.
 
-Abdallah Khemais
+**Stack :** React.js, JavaScript, Node.js, Express.js, Figma, GitHub.
+
+### Stagiaire en Développement IA & IoT – STEG
+**Avril - juin 2023**
+
+- Développement d'une application IoT pour la commande à distance.
+- Intégration de modules IA pour l'automatisation.
+- Traitement des données avec Python.
+- Base de données temps réel avec Firebase.
+
+**Stack :** Python, Firebase, Raspberry Pi 4.
+
+## Compétences techniques
+
+#### Langages & Frameworks
+- **Python** ⭐⭐⭐⭐⭐
+- **R** ⭐⭐⭐⭐⭐
+- **Java** ⭐⭐☆☆☆
+- **React** ⭐⭐⭐☆☆
+- **Angular** ⭐⭐☆☆☆

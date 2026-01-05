@@ -11,6 +11,21 @@ filters:
   - webr
 css: styles.css
 ---
+---
+title: ""
+author: "Votre Nom"
+date: "2026-01-04"
+format: 
+  revealjs:
+    theme: solarized
+    slide-number: true
+    incremental: true
+execute:
+  echo: TRUE
+  warning: FALSE
+  error: FALSE
+---
+
 
 
 
