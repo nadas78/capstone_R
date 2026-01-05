@@ -11,205 +11,113 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    
+
     env:
       JEKYLL_ENV: "disabled"
       DISABLE_JEKYLL: "true"
-    
+
     steps:
+      # =============================
+      # 1. Checkout
+      # =============================
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Remove docs directory completely
+      # =============================
+      # 2. Nettoyage
+      # =============================
+      - name: Clean previous build
         run: |
-          echo "🗑️  SUPPRESSION COMPLÈTE du dossier docs..."
-          rm -rf docs/ _site/ 2>/dev/null || true
-          echo "✅ Nettoyé"
+          echo "🗑️ Nettoyage..."
+          rm -rf docs/ _site/ .quarto-cache/ _freeze/
+          echo "✅ OK"
 
+      # =============================
+      # 3. Setup Quarto
+      # =============================
       - name: Setup Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
-      - name: Cache pip packages
-        uses: actions/cache@v3
-        id: cache-pip
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('.github/workflows/deploy.yml') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - name: Install Python and Jupyter
+      # =============================
+      # 4. Python + Jupyter (WebR / notebooks)
+      # =============================
+      - name: Setup Python & Jupyter
         run: |
           python3 -m pip install --upgrade pip
           python3 -m pip install jupyter nbformat ipykernel jupyter-cache
 
-      - name: Setup R for binary packages
+      # =============================
+      # 5. Setup R
+      # =============================
+      - name: Setup R
         uses: r-lib/actions/setup-r@v2
         with:
           r-version: '4.3'
 
-      - name: Cache R packages
-        uses: actions/cache@v3
-        id: cache-r
+      # =============================
+      # 6. Install R packages (PRO)
+      # =============================
+      - name: Install R packages
+        uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          path: |
-            /usr/local/lib/R/site-library
-            ~/.R/library
-            ~/R/library
-          key: ${{ runner.os }}-r4.3-packages-${{ hashFiles('.github/workflows/deploy.yml') }}
-          restore-keys: |
-            ${{ runner.os }}-r4.3-packages-
+          packages: |
+            rmarkdown
+            knitr
+            dplyr
+            ggplot2
+            tidyr
+            readxl
+            lubridate
+            car
+            lmtest
+            gplots
+          cache-version: 1
 
-      - name: Install R packages FROM BINARIES (NO SOURCE COMPILATION)
-        if: steps.cache-r.outputs.cache-hit != 'true'
-        run: |
-          echo "⚡⚡⚡ INSTALLATION R - BINAIRES UNIQUEMENT ⚡⚡⚡"
-          
-          cat > ~/.Rprofile << 'EOF'
-          options(
-            install.packages.compile.from.source = "never",
-            install.packages.check.source = "no",
-            Ncpus = 6,
-            timeout = 300,
-            INSTALL_opts = c(
-              "--no-multiarch",
-              "--no-docs", 
-              "--no-test-load"
-            )
-          )
-          
-          ubuntu_codename <- "jammy"
-          rspm_url <- paste0(
-            "https://packagemanager.rstudio.com/cran/__linux__/",
-            ubuntu_codename,
-            "/latest"
-          )
-          
-          options(repos = c(RSPM = rspm_url))
-          EOF
-          
-          Rscript -e "
-          cat('\n=== CONFIGURATION ACTIVE ===\n')
-          cat('1. Dépôt      :', getOption('repos')[1], '\n')
-          cat('2. Compilation:', getOption('install.packages.compile.from.source'), '\n')
-          cat('=============================\n')
-          "
-          
-          Rscript -e "
-          start_time <- Sys.time()
-          cat('📦 Début de l\'installation des packages R...\n\n')
-          
-          pkgs <- c('rmarkdown', 'knitr', 'dplyr', 'ggplot2', 'tidyr', 
-                   'readxl', 'lubridate', 'car', 'lmtest', 'gplots')
-          
-          install.packages(pkgs, type = 'binary')
-          
-          cat('\n=== VÉRIFICATION ===\n')
-          installed <- rownames(installed.packages())
-          for (pkg in pkgs) {
-            if (pkg %in% installed) {
-              cat('✓', pkg, '\n')
-            } else {
-              cat('✗', pkg, '\n')
-            }
-          }
-          "
-
+      # =============================
+      # 7. TinyTeX (LaTeX)
+      # =============================
       - name: Cache TinyTeX
         uses: actions/cache@v3
-        id: cache-tinytex
         with:
           path: ~/.TinyTeX
-          key: ${{ runner.os }}-tinytex-shared
-          restore-keys: |
-            ${{ runner.os }}-tinytex-
+          key: ${{ runner.os }}-tinytex
 
-      - name: Install TinyTeX for LaTeX formulas
-        if: steps.cache-tinytex.outputs.cache-hit != 'true'
+      - name: Install TinyTeX
         run: |
-          echo "📄 Installation de TinyTeX..."
-          wget -qO- "https://yihui.org/tinytex/install-unx.sh" | sh
+          if [ ! -d "$HOME/.TinyTeX" ]; then
+            echo "📄 Installation TinyTeX..."
+            wget -qO- https://yihui.org/tinytex/install-unx.sh | sh
+          fi
+
           echo "$HOME/.TinyTeX/bin/x86_64-linux" >> $GITHUB_PATH
-          export PATH="$HOME/.TinyTeX/bin/x86_64-linux:$PATH"
-          
-          # Mettre à jour et installer les packages essentiels
           tlmgr update --self
-          tlmgr install scheme-basic scheme-medium
-          tlmgr install \
-            koma-script \
-            scrartcl \
-            xcolor \
-            array \
-            subcaption \
-            booktabs \
-            float \
-            geometry \
-            hyperref \
-            caption \
-            fancyhdr \
-            microtype \
-            wrapfig \
-            amsmath \
-            amsfonts \
-            amssymb \
-            lualatex \
-            pdflatex
-          
-          which pdflatex
+          tlmgr install scheme-basic amsmath amsfonts amssymb booktabs geometry hyperref xcolor
+
           pdflatex --version
-          echo "✅ TinyTeX installé"
+          echo "✅ TinyTeX prêt"
 
-      - name: Setup LaTeX PATH
-        run: |
-          export PATH="$HOME/.TinyTeX/bin/x86_64-linux:$PATH"
-          echo "$HOME/.TinyTeX/bin/x86_64-linux" >> $GITHUB_PATH
-          echo "🔍 Vérification LaTeX:"
-          which lualatex || echo "lualatex pas trouvé"
-          which pdflatex || echo "pdflatex pas trouvé"
-
-      - name: Cache Quarto output
-        uses: actions/cache@v3
-        id: cache-quarto
-        with:
-          path: |
-            docs/
-            _freeze/
-            .quarto-cache/
-          key: ${{ runner.os }}-quarto-${{ hashFiles('**/*.qmd', '**/_quarto.yml', '**/*.bib', '**/*.csl') }}
-          restore-keys: |
-            ${{ runner.os }}-quarto-
-
+      # =============================
+      # 8. Render Quarto
+      # =============================
       - name: Render Quarto website
         run: |
-          echo "🚀 Rendu du site Quarto..."
-          
-          # Vérifier la présence de LaTeX
-          echo "🔍 Vérification LaTeX..."
-          which lualatex || which pdflatex || echo "⚠️  Aucun moteur LaTeX trouvé"
-          
-          # Toujours faire un rendu complet pour éviter les problèmes de cache
-          echo "📝 Rendu complet..."
+          echo "🚀 Rendu Quarto..."
           quarto render
-          
           echo "✅ Rendu terminé"
 
-      - name: Post-process to ELIMINATE Jekyll
+      # =============================
+      # 9. Kill Jekyll définitivement
+      # =============================
+      - name: Disable Jekyll
         run: |
-          echo "🛑 ÉLIMINATION DÉFINITIVE DE JEKYLL..."
-          
-          if [ ! -d "docs" ]; then
-            echo "❌ ERREUR : docs/ non trouvé"
-            exit 1
-          fi
-          
           touch docs/.nojekyll
-          
-          if [ -f "docs/index.qmd.html" ]; then
-            mv docs/index.qmd.html docs/index.html
-          fi
+          echo "🛑 Jekyll désactivé"
 
+      # =============================
+      # 10. Deploy GitHub Pages
+      # =============================
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -218,5 +126,3 @@ jobs:
           publish_branch: gh-pages
           force_orphan: true
           keep_files: false
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
