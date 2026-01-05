@@ -31,7 +31,6 @@ jobs:
       - name: Setup Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
-      # CACHE pour Python packages
       - name: Cache pip packages
         uses: actions/cache@v3
         id: cache-pip
@@ -51,7 +50,6 @@ jobs:
         with:
           r-version: '4.3'
 
-      # CACHE pour R packages
       - name: Cache R packages
         uses: actions/cache@v3
         id: cache-r
@@ -64,156 +62,61 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-r4.3-packages-
 
-      # ÉTAPE CRITIQUE : Installation R depuis BINAIRES SEULEMENT
       - name: Install R packages FROM BINARIES (NO SOURCE COMPILATION)
         if: steps.cache-r.outputs.cache-hit != 'true'
         run: |
           echo "⚡⚡⚡ INSTALLATION R - BINAIRES UNIQUEMENT ⚡⚡⚡"
-          echo "⚠️  COMPILATION SOURCE : DÉSACTIVÉE"
           
-          # Configuration AGGRESSIVE pour binaires
           cat > ~/.Rprofile << 'EOF'
-          # =================================================
-          # CONFIGURATION ULTRA-OPTIMISÉE POUR BINAIRES
-          # =================================================
-          
-          # 1. DÉSACTIVER TOUTE COMPILATION
           options(
-            # NE JAMAIS compiler depuis les sources
             install.packages.compile.from.source = "never",
-            # Ne pas vérifier les sources
             install.packages.check.source = "no",
-            # Installation parallèle maximale
             Ncpus = 6,
-            # Timeout long pour gros packages
             timeout = 300,
-            # Options d'installation POUR BINAIRES
             INSTALL_opts = c(
               "--no-multiarch",
               "--no-docs", 
-              "--no-test-load",
-              "--no-byte-compile",
-              "--no-staged-install",
-              "--no-data"
+              "--no-test-load"
             )
           )
           
-          # 2. UTILISER RSPM POUR BINAIRES UBUNTU 22.04
-          # RStudio Package Manager - binaires pré-compilés
-          ubuntu_codename <- "jammy"  # Ubuntu 22.04
+          ubuntu_codename <- "jammy"
           rspm_url <- paste0(
             "https://packagemanager.rstudio.com/cran/__linux__/",
             ubuntu_codename,
             "/latest"
           )
           
-          # Définir comme dépôt PRINCIPAL
           options(repos = c(RSPM = rspm_url))
-          
-          cat("\n")
-          cat("=========================================\n")
-          cat("🎯 MODE BINAIRE FORCÉ ACTIVÉ\n")
-          cat("🔧 Dépôt :", rspm_url, "\n")
-          cat("🚫 Compilation source : INTERDITE\n")
-          cat("⚡ Ncpus :", getOption("Ncpus"), "\n")
-          cat("=========================================\n")
           EOF
           
-          # VÉRIFIER LA CONFIGURATION
-          echo "🔍 Vérification configuration R..."
           Rscript -e "
           cat('\n=== CONFIGURATION ACTIVE ===\n')
           cat('1. Dépôt      :', getOption('repos')[1], '\n')
           cat('2. Compilation:', getOption('install.packages.compile.from.source'), '\n')
-          cat('3. Ncpus      :', getOption('Ncpus'), '\n')
-          cat('4. INSTALL_opts:', paste(getOption('INSTALL_opts'), collapse=', '), '\n')
           cat('=============================\n')
           "
           
-          # LISTE DES PACKAGES (optimisée pour vitesse)
           Rscript -e "
           start_time <- Sys.time()
           cat('📦 Début de l\'installation des packages R...\n\n')
           
-          # Packages par groupe (installation plus stable)
-          groups <- list(
-            'Groupe 1 - Core' = c('rmarkdown', 'knitr'),
-            'Groupe 2 - Tidyverse' = c('dplyr', 'ggplot2', 'tidyr'),
-            'Groupe 3 - Data I/O' = c('readxl', 'lubridate'),
-            'Groupe 4 - Stats' = c('car', 'lmtest', 'gplots')
-          )
+          pkgs <- c('rmarkdown', 'knitr', 'dplyr', 'ggplot2', 'tidyr', 
+                   'readxl', 'lubridate', 'car', 'lmtest', 'gplots')
           
-          # Fonction d'installation avec retry
-          install_group <- function(pkgs, group_name, max_retries = 2) {
-            cat('\n---', group_name, '---\n')
-            
-            for (retry in 1:max_retries) {
-              tryCatch({
-                cat('Tentative', retry, ': ', paste(pkgs, collapse=', '), '\n')
-                
-                # Essayer d'abord avec type='binary'
-                result <- tryCatch({
-                  install.packages(pkgs, type = 'binary', quiet = TRUE)
-                  '✅ Binaire'
-                }, error = function(e1) {
-                  # Fallback sans type='binary' mais avec options anti-compilation
-                  install.packages(pkgs, quiet = TRUE)
-                  '⚠️  Standard (fallback)'
-                })
-                
-                cat('Succès :', result, '\n')
-                return(TRUE)
-                
-              }, error = function(e) {
-                if (retry == max_retries) {
-                  cat('❌ Échec après', max_retries, 'tentatives\n')
-                  cat('Erreur :', e$message, '\n')
-                  return(FALSE)
-                }
-                cat('⏱️  Pause de 5 secondes avant réessai...\n')
-                Sys.sleep(5)
-              })
-            }
-          }
+          install.packages(pkgs, type = 'binary')
           
-          # Installer chaque groupe
-          for (group_name in names(groups)) {
-            install_group(groups[[group_name]], group_name)
-          }
-          
-          # VÉRIFICATION FINALE
-          cat('\n=== VÉRIFICATION DES INSTALLATIONS ===\n')
-          all_pkgs <- unlist(groups, use.names = FALSE)
+          cat('\n=== VÉRIFICATION ===\n')
           installed <- rownames(installed.packages())
-          
-          success_count <- 0
-          for (pkg in all_pkgs) {
+          for (pkg in pkgs) {
             if (pkg %in% installed) {
-              version <- packageVersion(pkg)
-              cat('✓', pkg, 'v', as.character(version), '\n')
-              success_count <- success_count + 1
+              cat('✓', pkg, '\n')
             } else {
-              cat('✗', pkg, 'MANQUANT\n')
+              cat('✗', pkg, '\n')
             }
-          }
-          
-          end_time <- Sys.time()
-          total_time <- round(difftime(end_time, start_time, units = 'secs'), 1)
-          
-          cat('\n📊 RÉSUMÉ :\n')
-          cat('  Packages :', success_count, '/', length(all_pkgs), '\n')
-          cat('  Temps    :', total_time, 'secondes\n')
-          
-          if (success_count == length(all_pkgs)) {
-            cat('🎯 SUCCÈS COMPLET\n')
-          } else {
-            cat('⚠️  ATTENTION : Certains packages manquent\n')
           }
           "
-          
-          echo "✅ Installation R terminée"
 
-      # CACHE pour TinyTeX (partagé avec le workflow PDFs)
       - name: Cache TinyTeX
         uses: actions/cache@v3
         id: cache-tinytex
@@ -223,24 +126,21 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-tinytex-
 
-      # Installer TinyTeX seulement si pas dans le cache
       - name: Install TinyTeX for LaTeX formulas
         if: steps.cache-tinytex.outputs.cache-hit != 'true'
         run: |
-          echo "📄 Installation de TinyTeX pour les formules..."
-          
-          # 1. Installer TinyTeX
+          echo "📄 Installation de TinyTeX..."
           wget -qO- "https://yihui.org/tinytex/install-unx.sh" | sh
-          
-          # 2. Ajouter au PATH
           echo "$HOME/.TinyTeX/bin/x86_64-linux" >> $GITHUB_PATH
-          
-          # 3. Attendre que le PATH soit mis à jour
           export PATH="$HOME/.TinyTeX/bin/x86_64-linux:$PATH"
           
-          # 4. Mettre à jour tlmgr et installer les packages manquants
+          # Mettre à jour et installer les packages essentiels
           tlmgr update --self
+          tlmgr install scheme-basic scheme-medium
           tlmgr install \
+            koma-script \
+            scrartcl \
+            xcolor \
             array \
             subcaption \
             booktabs \
@@ -254,22 +154,21 @@ jobs:
             amsmath \
             amsfonts \
             amssymb \
-            || echo "⚠️ Certains packages déjà installés"
+            lualatex \
+            pdflatex
           
-          # 5. Vérifier l'installation
           which pdflatex
           pdflatex --version
           echo "✅ TinyTeX installé"
 
-      # S'assurer que le PATH TinyTeX est disponible même avec cache
       - name: Setup LaTeX PATH
         run: |
           export PATH="$HOME/.TinyTeX/bin/x86_64-linux:$PATH"
           echo "$HOME/.TinyTeX/bin/x86_64-linux" >> $GITHUB_PATH
-          echo "🔍 Vérification pdflatex:"
-          which pdflatex || echo "pdflatex pas encore dans PATH"
+          echo "🔍 Vérification LaTeX:"
+          which lualatex || echo "lualatex pas trouvé"
+          which pdflatex || echo "pdflatex pas trouvé"
 
-      # CACHE pour le rendu Quarto
       - name: Cache Quarto output
         uses: actions/cache@v3
         id: cache-quarto
@@ -286,69 +185,37 @@ jobs:
         run: |
           echo "🚀 Rendu du site Quarto..."
           
-          # Si pas de cache, faire un rendu complet
-          if [ "${{ steps.cache-quarto.outputs.cache-hit }}" != 'true' ]; then
-            echo "📝 Rendu complet nécessaire..."
-            quarto render --no-cache
-          else
-            echo "✅ Utilisation du cache Quarto"
-            # Vérifier que docs/ existe depuis le cache
-            if [ ! -d "docs" ]; then
-              echo "⚠️  Cache présent mais docs/ manquant, rendu complet..."
-              quarto render --no-cache
-            fi
-          fi
+          # Vérifier la présence de LaTeX
+          echo "🔍 Vérification LaTeX..."
+          which lualatex || which pdflatex || echo "⚠️  Aucun moteur LaTeX trouvé"
+          
+          # Toujours faire un rendu complet pour éviter les problèmes de cache
+          echo "📝 Rendu complet..."
+          quarto render
           
           echo "✅ Rendu terminé"
 
-      # ÉTAPE CRITIQUE : Post-traitement SANS JEKYLL
       - name: Post-process to ELIMINATE Jekyll
         run: |
           echo "🛑 ÉLIMINATION DÉFINITIVE DE JEKYLL..."
           
-          # S'assurer que docs/ existe
           if [ ! -d "docs" ]; then
-            echo "❌ ERREUR : docs/ non trouvé après rendu"
+            echo "❌ ERREUR : docs/ non trouvé"
             exit 1
           fi
           
-          # 1. CRÉER .nojekyll EXPLICITE
-          echo "# ===========================================" > docs/.nojekyll
-          echo "# JEKYLL COMPLETELY DISABLED" >> docs/.nojekyll
-          echo "# This is a static HTML site" >> docs/.nojekyll
-          echo "# GitHub Pages: DO NOT PROCESS WITH JEKYLL" >> docs/.nojekyll
-          echo "# Generated by Quarto on $(date)" >> docs/.nojekyll
-          echo "# ===========================================" >> docs/.nojekyll
+          touch docs/.nojekyll
           
-          # 2. SUPPRIMER TOUS LES FICHIERS .scss/.sass
-          echo "🔪 Suppression des fichiers SCSS/SASS..."
-          scss_files=$(find docs -name "*.scss" -o -name "*.sass" 2>/dev/null | wc -l)
-          echo "Fichiers trouvés: $scss_files"
-          
-          if [ "$scss_files" -gt 0 ]; then
-            find docs -name "*.scss" -type f -delete
-            find docs -name "*.sass" -type f -delete
-            echo "✅ Fichiers supprimés"
-          fi
-          
-          # 3. Renommer index
           if [ -f "docs/index.qmd.html" ]; then
             mv docs/index.qmd.html docs/index.html
-            echo "✅ index.qmd.html → index.html"
           fi
-          
-          # 4. VÉRIFICATION FINALE
-          echo "🔍 VÉRIFICATION FINALE :"
-          echo "  - .nojekyll présent: $(test -f docs/.nojekyll && echo 'OUI' || echo 'NON')"
-          echo "  - Fichiers .scss restants: $(find docs -name '*.scss' 2>/dev/null | wc -l)"
-          echo "  - Fichiers .sass restants: $(find docs -name '*.sass' 2>/dev/null | wc -l)"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs
-          publish_branch: gh-pages  # Branche standard pour GitHub Pages
+          publish_branch: gh-pages
           force_orphan: true
           keep_files: false
           user_name: 'github-actions[bot]'
