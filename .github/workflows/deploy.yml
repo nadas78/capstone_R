@@ -84,17 +84,9 @@ jobs:
           path: ~/.TinyTeX
           key: ${{ runner.os }}-tinytex
 
-      - name: Install TinyTeX
+      - name: Install TinyTeX via Quarto
         run: |
-          if [ ! -d "$HOME/.TinyTeX" ]; then
-            echo "📄 Installation TinyTeX..."
-            wget -qO- https://yihui.org/tinytex/install-unx.sh | sh
-          fi
-
-          echo "$HOME/.TinyTeX/bin/x86_64-linux" >> $GITHUB_PATH
-          tlmgr update --self
-          tlmgr install scheme-basic amsmath amsfonts amssymb booktabs geometry hyperref xcolor
-
+          quarto install tinytex
           pdflatex --version
           echo "✅ TinyTeX prêt"
 
