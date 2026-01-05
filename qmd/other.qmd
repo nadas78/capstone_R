@@ -247,7 +247,8 @@ ggplot(top5_compare,
 
 
 ```
-## Conclusion et perspectives
-
+## Conclusion 
 Ce projet met en lumière des déséquilibres éducatifs prononcés au sein du système tunisien, caractérisés par une concentration des effectifs dans les régions côtières du Nord et de l'Est, et un déficit marqué dans les régions du Sud et de l'intérieur. On observe également une décroissance préoccupante des effectifs à mesure que le niveau scolaire s'élève, signalant des défis de rétention et d'orientation. Si la parité filles-garçons est globalement respectée, les choix de spécialisation révèlent un déséquilibre au profit des filières perçues comme plus porteuses, telles que l'Économie-Gestion, au détriment d'autres domaines. Pour y répondre, une politique éducative territorialisée, un renforcement de l'orientation professionnelle et des investissements ciblés dans les infrastructures des zones défavorisées s'avèrent essentiels pour bâtir un système plus équitable et adapté aux besoins de tous les élèves.
+## perspectives
+
 Perspectives : étendre l’analyse à plusieurs années, inclure le privé et d’autres indicateurs.

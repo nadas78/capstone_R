@@ -277,7 +277,7 @@ scale_x_continuous(expand=expansion(mult=c(0,0.2)))
 
 ### Indicateurs complémentaires
 
-1 Calcul des indicateurs régionaux
+1. Calcul des indicateurs régionaux
 ```{webr-r}
 total_region <- sexe_region %>%
   group_by(nom_cre) %>%
@@ -289,7 +289,7 @@ sexe_region_pct <- sexe_region %>%
 
 ```
 
-2 Le TOP 5 des régions avec le PLUS de filles (%) et le TOP 5 avec le MOINS de filles (%)
+2. Le TOP 5 des régions avec le PLUS de filles (%) et le TOP 5 avec le MOINS de filles (%)
 ```{webr-r}
 filles_region <- sexe_region_pct %>%
   filter(sexe == "Filles")
@@ -335,8 +335,11 @@ ggplot(top5_compare,
 ```
 
 
-3 le Top 5 régions avec le moinset  (%) et le plus (%) de garçons
-```{webr-r}library(dplyr)
+3. Le Top 5 régions avec le moinset  (%) et le plus (%) de garçons
+
+```{webr-r}
+
+library(dplyr)
 library(ggplot2)
 
 # 1. Total par région
@@ -418,7 +421,7 @@ ggplot(top5_niveaux,
 
 ```
 
-6 Le Top 5 niveaux les MOINS peuplés
+5. Le Top 5 niveaux les MOINS peuplés
 ```{webr-r}
 library(dplyr)
 library(ggplot2)
@@ -453,7 +456,7 @@ ggplot(top_bottom, aes(x = total, y = reorder(niveau, total), fill = category)) 
 
 ```
 
-7 Le Top 3 et Bottom 3 niveaux scolaires par région le plus moins eleves.
+6. Le Top 3 et Bottom 3 niveaux scolaires par région le plus moins eleves.
 ```{webr-r}
 library(patchwork)
 
