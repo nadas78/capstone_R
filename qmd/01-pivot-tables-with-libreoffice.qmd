@@ -382,7 +382,7 @@ ggplot(top5_compare,
   scale_fill_manual(
     values = c(
       "Plus de garçons" = "#1f78b4",   # bleu
-      "Moins de garçons" = "#E91E63"   # rose
+      "Moins de garçons" = "#e91e1eff"   # rose
     )
   ) +
   labs(
