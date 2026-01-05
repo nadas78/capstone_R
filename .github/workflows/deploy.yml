@@ -26,13 +26,11 @@ jobs:
           fetch-depth: 0
 
       # =============================
-      # 2. Nettoyage
+      # 2. Clean previous build
       # =============================
       - name: Clean previous build
         run: |
-          echo "🗑️ Nettoyage..."
           rm -rf docs/ _site/ .quarto-cache/ _freeze/
-          echo "✅ OK"
 
       # =============================
       # 3. Setup Quarto
@@ -41,7 +39,7 @@ jobs:
         uses: quarto-dev/quarto-actions/setup@v2
 
       # =============================
-      # 4. Python + Jupyter (WebR / notebooks)
+      # 4. Setup Python (Jupyter)
       # =============================
       - name: Setup Python & Jupyter
         run: |
@@ -57,7 +55,7 @@ jobs:
           r-version: '4.3'
 
       # =============================
-      # 6. Install R packages (PRO)
+      # 6. Install R packages
       # =============================
       - name: Install R packages
         uses: r-lib/actions/setup-r-dependencies@v2
@@ -73,39 +71,28 @@ jobs:
             car
             lmtest
             gplots
-          cache-version: 1
 
       # =============================
-      # 7. TinyTeX (LaTeX)
+      # 7. TinyTeX (SAFE – Quarto managed)
       # =============================
-      - name: Cache TinyTeX
-        uses: actions/cache@v3
-        with:
-          path: ~/.TinyTeX
-          key: ${{ runner.os }}-tinytex
-
-      - name: Install TinyTeX via Quarto
+      - name: Install TinyTeX
         run: |
           quarto install tinytex
-          
-          echo "✅ TinyTeX prêt"
+          pdflatex --version
 
       # =============================
       # 8. Render Quarto
       # =============================
       - name: Render Quarto website
         run: |
-          echo "🚀 Rendu Quarto..."
           quarto render
-          echo "✅ Rendu terminé"
 
       # =============================
-      # 9. Kill Jekyll définitivement
+      # 9. Disable Jekyll
       # =============================
       - name: Disable Jekyll
         run: |
           touch docs/.nojekyll
-          echo "🛑 Jekyll désactivé"
 
       # =============================
       # 10. Deploy GitHub Pages
@@ -117,4 +104,3 @@ jobs:
           publish_dir: ./docs
           publish_branch: gh-pages
           force_orphan: true
-          keep_files: false
